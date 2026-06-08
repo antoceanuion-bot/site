@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teorie | Constructorii și Destructorii în C#</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">P.F.</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">CV</a>
+      <a href="problems.html" class="nav-link">Probleme</a>
+      <a href="constructors.html" class="nav-link active">Constructori C#</a>
+      <a href="suplimentar.html" class="nav-link">Sarcina Suplimentara</a>
+      <a href="declaratie.html" class="nav-link">Declaratie</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="article-content">
+      <h1 class="page-title">Tema: Constructori și Destructori</h1>
+      <p class="page-subtitle">O analiză clară despre crearea, configurarea și ciclul de viață al obiectelor în C#</p>
+
+      <p class="article-p">
+        Când lucrăm cu variabile simple (cum ar fi un <code>int</code>), inițializarea este directă: scriem <code>int x = 10;</code> și gata. Dar în cazul obiectelor din lumea reală, lucrurile sunt mai complexe. Un obiect nu poate apărea în memorie „gol” sau cu date invalide. Pentru a asigura o pornire corectă și sigură a fiecărui obiect, limbajul C# folosește două mecanisme esențiale: <strong>Constructorii</strong> și <strong>Destructorii</strong>.
+      </p>
+
+      <div class="article-highlight">
+        <strong>Regulile de aur ale unui constructor:</strong>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem; list-style-type: disc;">
+          <li>Are întotdeauna exact același nume cu clasa în care este definit.</li>
+          <li>Nu returnează niciun tip de date (nici măcar <code>void</code>).</li>
+          <li>Se execută automat, o singură dată, în momentul în care creăm obiectul folosind operatorul <code>new</code>.</li>
+        </ul>
+      </div>
+
+      <h3 class="article-h3">1. Constructorii Impliciti (Fără Parametri)</h3>
+      <p class="article-p">
+        Constructorul implicit se ocupă de aducerea obiectului într-o stare neutră. Dacă uităm sau alegem să nu scriem niciun constructor în clasa noastră, C# ne oferă unul automat din oficiu (generat de compilator), care pune toate numerele pe 0 și textele pe null. Totuși, îl putem scrie chiar noi ca să definim valorile noastre de pornire.
+      </p>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi codul: Constructor Implicit</summary>
+        <pre><code>public class Time 
+{
+    private int hour;
+    private int minute;
+    private int second;
+
+    // Constructor implicit (definit de programator)
+    public Time() 
+    {
+        hour = 0;
+        minute = 0;
+        second = 0;
+        Console.WriteLine("Apel constructor implicit: Timpul a fost resetat.");
+    }
+}</code></pre>
+      </details>
+
+      <h3 class="article-h3">2. Constructorii cu Parametri</h3>
+      <p class="article-p">
+        De cele mai multe ori, nu vrei ca obiectele tale să fie identice la pornire. Constructorul cu parametri ne permite să trimitem valori din exterior chiar în momentul creării, oferind obiectului atribute unice din prima secundă. Parametrii pot avea și valori implicite (valori de rezervă în caz că utilizatorul nu trimite toate datele).
+      </p>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi codul: Constructor cu Parametri</summary>
+        <pre><code>public class Time 
+{
+    private int hour;
+    private int minute;
+    private int second;
+
+    // Constructor cu valori implicite (daca nu trimitem toti parametrii, se folosesc cei de rezerva)
+    public Time(int h = 0, int m = 0, int s = 0) 
+    {
+        hour = h;
+        minute = m;
+        second = s;
+    }
+}
+
+// Utilizare flexibilă:
+// Time t1 = new Time(10, 30, 0); // Seteaza ora 10:30:00
+// Time t2 = new Time(12);       // Seteaza ora 12:00:00 (minutele si secundele raman 0)</code></pre>
+      </details>
+
+      <h3 class="article-h3">3. Constructorul de Copiere</h3>
+      <p class="article-p">
+        <strong>Atenție la o confuzie des întâlnită!</strong> Dacă scriem <code>obiect1 = obiect2;</code>, noi nu copiem obiectul, ci doar copiem o referință (ambele variabile vor arăta către aceeași zonă din memorie). Dacă modifici ceva în <code>obiect1</code>, se va schimba automat și în <code>obiect2</code>. 
+        <br><br>
+        Pentru a face o <strong>copiere reală și independentă</strong> (o clonă fizică), folosim un constructor de copiere. Acesta primește ca parametru un obiect existent de același tip și îi copiază manual valorile câmp cu câmp într-un obiect complet nou.
+      </p>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi codul: Constructor de Copiere & Clasa Date</summary>
+        <pre><code>using System;
+
+public class Date 
+{
+    private int day, month, year;
+
+    // Constructor cu parametri
+    public Date(int d, int m, int y) 
+    {
+        day = d;
+        month = m;
+        year = y;
+    }
+
+    // Constructor de copiere (creeaza o instanta complet noua pe baza alteia)
+    public Date(Date other) 
+    {
+        this.day = other.day;
+        this.month = other.month;
+        this.year = other.year;
+    }
+
+    public void Print() 
+    {
+        Console.WriteLine($"{day}/{month}/{year}");
+    }
+}
+
+// Demonstratie in Main:
+// Date date1 = new Date(15, 9, 2018);
+// Date date2 = new Date(date1); // Clona independenta</code></pre>
+      </details>
+
+      <h3 class="article-h3">4. Cuvântul cheie „this”</h3>
+      <p class="article-p">
+        Cuvântul cheie <code>this</code> reprezintă o referință directă către obiectul curent în care ne aflăm. Îl folosim în două situații principale foarte practice:
+      </p>
+      <ul style="margin-bottom: 1.5rem; margin-left: 1.5rem; list-style-type: decimal; color: #d4d4d8;">
+        <li><strong>Evitarea conflictelor de nume:</strong> Atunci când parametrii constructorului au exact aceleași nume ca și câmpurile clasei (ex: <code>this.x = x;</code>).</li>
+        <li><strong>Chaining (Apel în lanț):</strong> Când vrem ca o metodă să returneze obiectul curent (<code>return this;</code>), permițându-ne să apelăm mai multe metode una după alta pe aceeași linie de cod.</li>
+      </ul>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi codul: Utilizarea "this" si Apelul in Lant</summary>
+        <pre><code>using System;
+
+public class Num 
+{
+    private int x;
+
+    // 1. Rezolvarea conflictului de nume
+    public Num(int x) 
+    {
+        this.x = x; // "this.x" este campul clasei, "x" este parametrul primit
+    }
+
+    // 2. Returnarea instantei pentru apel in lant
+    public Num Incrementeaza() 
+    {
+        this.x++;
+        return this; // Returneaza obiectul curent
+    }
+
+    public void Print() 
+    {
+        Console.WriteLine($"Valoare: {x}");
+    }
+}
+
+// Utilizare (Method Chaining):
+// Num n = new Num(3);
+// n.Incrementeaza().Incrementeaza(); // Valoarea devine 5 direct pe o singura linie!</code></pre>
+      </details>
+
+      <h3 class="article-h3">5. Destructorii în C#</h3>
+      <p class="article-p">
+        Dacă constructorul este cel care dă viață unui obiect, destructorul se ocupă de curățarea resurselor înainte ca acel obiect să fie șters definitiv din memorie de către <em>Garbage Collector</em>. 
+        <br><br>
+        În C#, gestionarea memoriei este automată, deci nu avem nevoie mereu de destructori. Îi scriem doar în cazuri speciale (de exemplu, când deschidem un fișier text sau o conexiune la o bază de date și trebuie neapărat să le închidem înainte ca obiectul să dispară).
+      </p>
+      <div class="article-highlight" style="margin-bottom: 1.5rem;">
+        <strong>Caracteristicile unui destructor:</strong>
+        <ul style="margin-top: 0.5rem; margin-left: 1.5rem; list-style-type: disc;">
+          <li>Numele său este format din caracterul tilda (<code>~</code>) urmat de numele clasei (ex: <code>~Time()</code>).</li>
+          <li>Nu are modificatori de acces (niciodată nu scriem <code>public</code> sau <code>private</code> în fața lui).</li>
+          <li>Nu are parametri și nu returnează nicio valoare.</li>
+          <li>O clasă poate avea un singur destructor.</li>
+        </ul>
+      </div>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi codul: Destructor & Clasa CreateAndDestroy</summary>
+        <pre><code>using System;
+
+public class CreateAndDestroy 
+{
+    private int id;
+
+    // Constructor
+    public CreateAndDestroy(int value) 
+    {
+        id = value;
+        Console.WriteLine($"Constructor apelat pentru obiectul {id}");
+    }
+
+    // Destructor - se apeleaza automat cand Garbage Collector sterge obiectul
+    ~CreateAndDestroy() 
+    {
+        Console.WriteLine($"Destructor apelat pentru obiectul {id} (Resurse eliberate).");
+    }
+}</code></pre>
+      </details>
+
+      <h3 class="article-h3">6. Studiu de Caz: Implementarea Tipului Abstract Array</h3>
+      <p class="article-p">
+        Pentru a pune toate cunoștințele la un loc, iată o implementare completă a unei clase numite <code>Array</code>. Aceasta gestionează un vector alocat dinamic și demonstrează perfect cum lucrează în echipă un constructor implicit, unul cu dimensiune stabilită și un constructor de copiere profundă (deep copy):
+      </p>
+
+      <details class="code-accordion" style="margin-bottom: 2rem;">
+        <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Vezi Studiul de Caz: Clasa Array</summary>
+        <pre><code>using System;
+
+public class Array 
+{
+    private int[] t; // Vectorul intern
+    private int c;   // Capacitatea vectorului
+
+    // 1. Constructor implicit
+    public Array() 
+    {
+        c = 0;
+        t = null;
+    }
+
+    // 2. Constructor cu dimensiune primita ca parametru
+    public Array(int k) 
+    {
+        c = k;
+        t = new int[c];
+        PutN(100); // Initializam automat cu valori intre 0 si 99
+    }
+
+    // 3. Constructor de copiere profund (Deep Copy)
+    public Array(Array other) 
+    {
+        if (other.c == 0) 
+        {
+            c = 0;
+            t = null;
+        }
+        else 
+        {
+            c = other.c;
+            t = new int[c]; // Alocam o zona noua de memorie
+            for (int i = 0; i < c; i++) 
+            {
+                t[i] = other.t[i]; // Copiem valorile una cate una
+            }
+        }
+    }
+
+    // Umple vectorul cu valori aleatorii (Random)
+    public void PutN(int n) 
+    {
+        if (c == 0) 
+        {
+            c = 10;
+            t = new int[c];
+        }
+        Random rnd = new Random();
+        for (int i = 0; i < c; i++) 
+        {
+            t[i] = rnd.Next(n);
+        }
+    }
+
+    // Afisarea elementelor vectorului
+    public void Print() 
+    {
+        if (c == 0) 
+        {
+            Console.WriteLine("Vectorul este gol.");
+        }
+        else 
+        {
+            Console.WriteLine("Elemente: " + string.Join(" ", t));
+        }
+    }
+}</code></pre>
+      </details>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 · Portofoliu Academic · Realizat manual</p>
+  </footer>
+
+</body>
+</html>

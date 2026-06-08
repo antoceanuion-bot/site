@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portofoliu | Probleme Rezolvate</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+ <nav class="navbar">
+    <div class="nav-brand">P.F.</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">CV</a>
+      <a href="problems.html" class="nav-link active">Probleme</a>
+      <a href="constructors.html" class="nav-link">Constructori C#</a>
+      <a href="suplimentar.html" class="nav-link">Sarcina Suplimentara</a>
+      <a href="declaratie.html" class="nav-link">Declaratie</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title">Probleme Rezolvate</h1>
+    <p class="page-subtitle">Registru complet al aplicatiilor realizate pe parcursul practicii</p>
+
+    <div class="problems-list">
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 01</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M1. 5 Se consideră mulțimea P={P1,P2,...,Pn} formată din n puncte (2≤n≤30) pe un plan euclidian.
+Fișierul date.in conține pe prima linie numărul n, care reprezintă numărul de puncte din plan pe liniile
+următoare se regăsesc coordonatele punctelor. Fiecare punct Pj este definit prin coordonatele sale xj, yj .
+Elaborați un program care afișează la ecran coordonatele punctelor Pa, Pb distanța dintre care este
+maximă. Distanța dintre punctele Pj, Pm se calculează cu ajutorul formulei:
+
+djm = √(xj − xm)
+
+2 + (yj−ym)
+2</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Citirea datelor de la tastatura
+        Console.Write("Introduceti numarul de puncte n (2-30): ");
+        int n = int.Parse(Console.ReadLine());
+
+        double[] x = new double[n];
+        double[] y = new double[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write($"Introduceti coordonatele punctului P{i + 1} (x y): ");
+            string[] parts = Console.ReadLine().Trim().Split(' ');
+            x[i] = double.Parse(parts[0]);
+            y[i] = double.Parse(parts[1]);
+        }
+
+        // Gasirea perechii de puncte cu distanta maxima
+        double distantaMax = -1;
+        int indexA = 0, indexB = 1;
+
+        for (int j = 0; j < n - 1; j++)
+        {
+            for (int m = j + 1; m < n; m++)
+            {
+                double dx = x[j] - x[m];
+                double dy = y[j] - y[m];
+                double distanta = Math.Sqrt(dx * dx + dy * dy);
+
+                if (distanta > distantaMax)
+                {
+                    distantaMax = distanta;
+                    indexA = j;
+                    indexB = m;
+                }
+            }
+        }
+
+        // Afisarea rezultatelor
+        Console.WriteLine($"Punctul Pa = P{indexA + 1}({x[indexA]}, {y[indexA]})");
+        Console.WriteLine($"Punctul Pb = P{indexB + 1}({x[indexB]}, {y[indexB]})");
+        Console.WriteLine($"Distanta maxima = {distantaMax:F4}");
+    }
+}
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 1.5.png" alt="Captura ecran problema 1" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 02</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M2. 2 Problema rucsacului. O persoană are un rucsac cu care poate transporta o greutate maximă G.
+Persoana are la dispoziție n obiecte și cunoaște pentru fiecare obiect greutatea și câștigul care se obține
+în urma transportului său la destinație. Se cere să se precizeze ce obiecte trebuie să transporte persoana
+în așa fel încât câștigul să fie maxim. Persoana are posibilitatea să taie obiectele</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+
+class Obiect
+{
+    public int Index;
+    public double Greutate;
+    public double Castig;
+    public double Raport;
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write("Introduceti greutatea maxima a rucsacului (G): ");
+        double G = double.Parse(Console.ReadLine());
+
+        Console.Write("Introduceti numarul de obiecte (n): ");
+        int n = int.Parse(Console.ReadLine());
+
+        Obiect[] obiecte = new Obiect[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write($"Obiect {i + 1} - greutate si castig (ex: 10 60): ");
+            string[] parts = Console.ReadLine().Trim().Split(' ');
+            obiecte[i] = new Obiect
+            {
+                Index = i + 1,
+                Greutate = double.Parse(parts[0]),
+                Castig = double.Parse(parts[1]),
+                Raport = double.Parse(parts[1]) / double.Parse(parts[0])
+            };
+        }
+
+        // Greedy
+        Array.Sort(obiecte, (a, b) => b.Raport.CompareTo(a.Raport));
+
+        double castigTotal = 0;
+        double greutateRamas = G;
+
+        Console.WriteLine("\n--- Obiecte selectate ---");
+
+        for (int i = 0; i < n; i++)
+        {
+            if (greutateRamas <= 0)
+                break;
+
+            if (obiecte[i].Greutate <= greutateRamas)
+            {
+                // Luam obiectul intreg
+                Console.WriteLine($"Obiect {obiecte[i].Index}: luat complet " +
+                                  $"(greutate={obiecte[i].Greutate}, castig={obiecte[i].Castig})");
+                castigTotal += obiecte[i].Castig;
+                greutateRamas -= obiecte[i].Greutate;
+            }
+            else
+            {
+                // Luam doar o fractiune din obiect
+                double fractiune = greutateRamas / obiecte[i].Greutate;
+                double castigPartial = fractiune * obiecte[i].Castig;
+                Console.WriteLine($"Obiect {obiecte[i].Index}: luat {fractiune * 100:F1}% " +
+                                  $"(greutate={greutateRamas:F2}, castig={castigPartial:F2})");
+                castigTotal += castigPartial;
+                greutateRamas = 0;
+            }
+        }
+
+        Console.WriteLine($"\nCastig total maxim = {castigTotal:F2}");
+        Console.WriteLine($"Greutate utilizata  = {G - greutateRamas:F2} / {G}");
+    }
+}
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 2.2.png" alt="Captura ecran problema 2" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 03</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M3. 2 Elaborați un program care afișează la ecran toate modurile de a descompune un număr natural
+în sumă de k numere naturale distincte.
+Exemplu: pentru n=9 și k=3 soluțiile sunt: 1+2+6,2+3+4,1+3+5 3.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+
+class Program
+{
+    static int n, k;
+    static int[] sol;
+    static int nrSolutii = 0;
+
+    static void Backtrack(int nivel, int sumaRamasa, int minVal)
+    {
+        // suma e 0 => solutie gasita
+        if (nivel == k)
+        {
+            if (sumaRamasa == 0)
+            {
+                nrSolutii++;
+                for (int i = 0; i < k; i++)
+                {
+                    if (i > 0) Console.Write("+");
+                    Console.Write(sol[i]);
+                }
+                Console.WriteLine();
+            }
+            return;
+        }
+
+
+        int ramase = k - nivel - 1; 
+
+        for (int val = minVal; val <= sumaRamasa - (ramase * (2 * minVal + ramase + 1) / 2); val++)
+        {
+            sol[nivel] = val;
+            Backtrack(nivel + 1, sumaRamasa - val, val + 1);
+        }
+    }
+
+    static void Main()
+    {
+        Console.Write("Introduceti n: ");
+        n = int.Parse(Console.ReadLine());
+
+        Console.Write("Introduceti k: ");
+        k = int.Parse(Console.ReadLine());
+
+        sol = new int[k];
+
+        Console.WriteLine($"\nDescompunerile lui {n} in suma de {k} numere naturale distincte:");
+        Console.WriteLine("---------------------------------------------------");
+
+        Backtrack(0, n, 1);
+
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine($"Total solutii: {nrSolutii}");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 3.2.png" alt="Output 3" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 04</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M3. 38 Generarea combinărilor. Să se genereze combinări din n elemente luate câte m.
+Numărul combinărilor a n elemente luate câte m este calculată cu formula: Cn
+m =
+n!
+m!(n−m)!</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+
+class Program
+{
+    static int n, m;
+    static int[] sol;
+    static int nrCombinari = 0;
+
+    static void Backtrack(int nivel, int minVal)
+    {
+        if (nivel == m)
+        {
+            nrCombinari++;
+            Console.Write("{ ");
+            for (int i = 0; i < m; i++)
+            {
+                if (i > 0) Console.Write(", ");
+                Console.Write(sol[i]);
+            }
+            Console.WriteLine(" }");
+            return;
+        }
+
+        for (int val = minVal; val <= n - (m - nivel - 1); val++)
+        {
+            sol[nivel] = val;
+            Backtrack(nivel + 1, val + 1);
+        }
+    }
+
+    static long Factorial(int x)
+    {
+        long rez = 1;
+        for (int i = 2; i <= x; i++)
+            rez *= i;
+        return rez;
+    }
+
+    static void Main()
+    {
+        Console.Write("Introduceti n: ");
+        n = int.Parse(Console.ReadLine());
+
+        Console.Write("Introduceti m: ");
+        m = int.Parse(Console.ReadLine());
+
+        if (m > n)
+        {
+            Console.WriteLine("Eroare: m nu poate fi mai mare decat n!");
+            return;
+        }
+
+        sol = new int[m];
+
+        long C = Factorial(n) / (Factorial(m) * Factorial(n - m));
+
+        Console.WriteLine($"\nCombinarile din {n} elemente luate cate {m} (C({n},{m}) = {C}):");
+        Console.WriteLine("---------------------------------------------------");
+
+        Backtrack(0, 1);
+
+        Console.WriteLine("---------------------------------------------------");
+        Console.WriteLine($"Total combinari generate: {nrCombinari}");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 3.38.png" alt="Output 4" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 05</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M4. 2 Să se genereze și să se numere toate permutările mulțimii {1,2,3,...,n} care încep cu valoarea 1.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+using System.Collections.Generic;
+class PermutariIncepCu1
+{
+    static int n;           
+    static int[] perm;     
+    static bool[] folosit;  
+    static int contor = 0;  
+
+    static void Main()
+    {
+        Console.Write("Introdu n (dimensiunea multimii {1, 2, ..., n}): ");
+        n = int.Parse(Console.ReadLine());
+
+        perm = new int[n + 1]; 
+        folosit = new bool[n + 1];
+
+    
+        perm[1] = 1;
+        folosit[1] = true;
+
+        Console.WriteLine($"\nPermutarile lui {{1..{n}}} care incep cu 1:\n");
+
+        //  backtracking
+        Genereaza(2);
+
+        Console.WriteLine($"\nTotal permutari: {contor}  (= {n - 1}! = {Factorial(n - 1)})");
+    }
+
+    static void Genereaza(int pos)
+    {
+        if (pos == n + 1)
+        {
+            
+            contor++;
+            Console.Write($"{contor,4}. (");
+            for (int i = 1; i <= n; i++)
+                Console.Write(i < n ? $"{perm[i]}, " : $"{perm[i]}");
+            Console.WriteLine(")");
+            return;
+        }
+
+      
+        for (int val = 1; val <= n; val++)
+        {
+            if (!folosit[val])
+            {
+                perm[pos] = val;
+                folosit[val] = true;
+
+                Genereaza(pos + 1);
+
+                // Backtrack
+                folosit[val] = false;
+            }
+        }
+    }
+
+    /// <summary>Calculează n! iterativ.</summary>
+    static long Factorial(int k)
+    {
+        long rez = 1;
+        for (int i = 2; i <= k; i++)
+            rez *= i;
+        return rez;
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 4.2.png" alt="Output 5" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 06</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M5. 24 Calculați subsecvența de sumă maximă pentru un vector A de n numere reale folosind o
+abordare de tip desparte și stăpânește.
+Subsecvență a unui vector A[1..n] se definește ca o secvență continuă de elemente din A. De
+exemplu, A[i..j](pentru orice 1<=i<=j<=n) reprezintă o subsecvență a lui A.
+Exemplu: Pentru A = {−2, 1, −3, 4, −1, 2, 1, −5, 4}, subsecvența de sumă maximă este {4, −1, 2, 1} de
+sumă 6.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+class SubsecventaSumaMaxima
+{
+    //Structura pentru a reține rezultatul complet 
+    struct Rezultat
+    {
+        public double Suma;  
+        public int Inceput; 
+        public int Sfarsit; 
+
+        public Rezultat(double suma, int inc, int sf)
+        { Suma = suma; Inceput = inc; Sfarsit = sf; }
+
+        public override string ToString() =>
+            $"suma = {Suma},  indici [{Inceput}..{Sfarsit}]";
+    }
+
+    static double[] A; 
+
+
+    //  CAZUL 3 — subsecvența care traversează mijlocul
+
+    static Rezultat SubsecventaCuMijloc(int st, int mid, int dr)
+    {
+        double sumStanga = double.NegativeInfinity;
+        double suma = 0;
+        int idxStanga = mid;
+        for (int i = mid; i >= st; i--)
+        {
+            suma += A[i];
+            if (suma > sumStanga)
+            {
+                sumStanga = suma;
+                idxStanga = i;
+            }
+        }
+
+        double sumDreapta = double.NegativeInfinity;
+        suma = 0;
+        int idxDreapta = mid + 1;
+        for (int j = mid + 1; j <= dr; j++)
+        {
+            suma += A[j];
+            if (suma > sumDreapta)
+            {
+                sumDreapta = suma;
+                idxDreapta = j;
+            }
+        }
+
+        return new Rezultat(sumStanga + sumDreapta, idxStanga, idxDreapta);
+    }
+
+    //  DIVIDE AND CONQUER PRINCIPAL
+
+    static Rezultat MaxSubarray(int st, int dr)
+    {
+        if (st == dr)
+            return new Rezultat(A[st], st, st);
+
+        int mid = (st + dr) / 2;
+
+        Rezultat rezStanga = MaxSubarray(st, mid);       
+        Rezultat rezDreapta = MaxSubarray(mid + 1, dr);  
+        Rezultat rezMijloc = SubsecventaCuMijloc(st, mid, dr); 
+
+        if (rezStanga.Suma >= rezDreapta.Suma && rezStanga.Suma >= rezMijloc.Suma)
+            return rezStanga;
+        if (rezDreapta.Suma >= rezStanga.Suma && rezDreapta.Suma >= rezMijloc.Suma)
+            return rezDreapta;
+        return rezMijloc;
+    }
+
+    //  MAIN
+    static void Main()
+    {
+        // Exemplul din problemă
+        Console.WriteLine("=== Exemplu din problema ===");
+        double[] exemplu = { 0, -2, 1, -3, 4, -1, 2, 1, -5, 4 }; 
+        int n = exemplu.Length - 1; 
+
+        A = exemplu;
+        AfiseazaVector(n);
+
+        Rezultat rez = MaxSubarray(1, n);
+        AfiseazaRezultat(rez, n);
+
+        // ── Exemplu cu toate negative 
+        Console.WriteLine("\n=== Toate elementele negative ===");
+        A = new double[] { 0, -5, -1, -3, -2, -4 };
+        n = A.Length - 1;
+        AfiseazaVector(n);
+        rez = MaxSubarray(1, n);
+        AfiseazaRezultat(rez, n);
+
+        // ── Exemplu cu un singur element 
+        Console.WriteLine("\n=== Un singur element ===");
+        A = new double[] { 0, 7.5 };
+        n = 1;
+        AfiseazaVector(n);
+        rez = MaxSubarray(1, n);
+        AfiseazaRezultat(rez, n);
+
+        // Citire de la tastatură 
+        Console.WriteLine("\n=== Introdu propriul vector ===");
+        Console.Write("n = ");
+        n = int.Parse(Console.ReadLine());
+        A = new double[n + 1];
+        Console.WriteLine("Introdu elementele (spatiu-separate):");
+        string[] tokens = Console.ReadLine().Split(' ');
+        for (int i = 1; i <= n; i++)
+            A[i] = double.Parse(tokens[i - 1]);
+
+        AfiseazaVector(n);
+        rez = MaxSubarray(1, n);
+        AfiseazaRezultat(rez, n);
+    }
+
+    //  UTILITARE DE AFIȘARE
+    static void AfiseazaVector(int n)
+    {
+        Console.Write("A = { ");
+        for (int i = 1; i <= n; i++)
+            Console.Write(i < n ? $"{A[i]}, " : $"{A[i]}");
+        Console.WriteLine(" }");
+    }
+
+    static void AfiseazaRezultat(Rezultat rez, int n)
+    {
+        Console.WriteLine($"Subsecventa de suma maxima:");
+        Console.Write("  Elemente: { ");
+        for (int i = rez.Inceput; i <= rez.Sfarsit; i++)
+            Console.Write(i < rez.Sfarsit ? $"{A[i]}, " : $"{A[i]}");
+        Console.WriteLine(" }");
+        Console.WriteLine($"  Suma    : {rez.Suma}");
+        Console.WriteLine($"  Pozitii : A[{rez.Inceput}..{rez.Sfarsit}]");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 5.24.png" alt="Output 6" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 07</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">Introdu M6. 2 Problema diligenței. Un comis-voiajor are de făcut o călătorie cu diligența între două orașe din
+vestul sălbatic. Călătoria cu diligența se desfășoară în n etape. În fiecare etapă diligența merge, fără
+întrerupere, între două orașe. După o etapă diligența este schimbată, iar comis-voiajorul decide în care
+oraș va merge în etapa următoare. Se știe că în fiecare etapă, cu excepția ultimei etape, se poate ajunge
+în unul din cele k orașe. Se cunoaște orașul de start, S și cel final, F (în ultima etapă se ajunge în orașul
+F). Pentru orice etapă se cunosc toate distanțele între orașele care sunt puncte de pornire și cele care
+sunt puncte de destinație.
+Se cere să se decidă care sunt orașele destinație pentru o anumită etapă, astfel încât lungimea totală a
+drumului, care trebuie afișată, să fie minimă.aici textul problemei sau cerinta.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+class ProblemaDiligentei
+{
+    const int INF = 999999;
+    static void RuleazaExempluClassic()
+    {
+        int n = 4, k = 3;
+
+        int[][][] dist = new int[5][][];
+
+        // Etapa 1
+        dist[1] = new int[1][];
+        dist[1][0] = new int[] { 2, 4, 3 };
+
+        // Etapa 2
+        dist[2] = new int[][] {
+            new int[] { 7, 4, 6 },
+            new int[] { 3, 2, 4 },
+            new int[] { 4, 3, 5 }
+        };
+
+        // Etapa 3
+        dist[3] = new int[][] {
+            new int[] { 1, 4, 7 },
+            new int[] { 6, 3, 3 },
+            new int[] { 5, 3, 2 }
+        };
+
+        // Etapa 4
+        dist[4] = new int[][] {
+            new int[] { 5 },
+            new int[] { 2 },
+            new int[] { 5 }
+        };
+
+        Console.WriteLine("══════════════════════════════════════════════");
+        Console.WriteLine("  EXEMPLU CLASIC");
+        Console.WriteLine("  4 etape, 3 orașe intermediare per etapă");
+        Console.WriteLine("══════════════════════════════════════════════");
+        Console.WriteLine("\nMatricele de distanțe:\n");
+
+        string[] etapeDesc = { "", "S → {1,2,3}", "{1,2,3} → {1,2,3}", "{1,2,3} → {1,2,3}", "{1,2,3} → F" };
+        int[] nrSurse = { 0, 1, k, k, k };
+        int[] nrDest = { 0, k, k, k, 1 };
+
+        for (int t = 1; t <= n; t++)
+        {
+            Console.WriteLine($"  Etapa {t} ({etapeDesc[t]}):");
+            // Antet coloane
+            Console.Write("         ");
+            if (t < n)
+                for (int j = 0; j < k; j++) Console.Write($"  Oraș{j + 1}");
+            else
+                Console.Write("     F");
+            Console.WriteLine();
+
+            for (int i = 0; i < nrSurse[t]; i++)
+            {
+                string src = (t == 1) ? "  S    " : $"  Oraș{i + 1} ";
+                Console.Write(src);
+                for (int j = 0; j < nrDest[t]; j++)
+                    Console.Write($"  {dist[t][i][j],4}");
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+
+        RezolvaSiAfiseaza(n, k, dist, nrSurse, nrDest);
+    }
+
+    //  CITIRE INTERACTIVĂ
+    static void RuleazaInteractiv()
+    {
+        Console.Write("Număr de etape n = ");
+        int n = int.Parse(Console.ReadLine());
+        Console.Write("Număr de orașe intermediare k = ");
+        int k = int.Parse(Console.ReadLine());
+
+        int[] nrSurse = new int[n + 1];
+        int[] nrDest = new int[n + 1];
+        for (int t = 1; t <= n; t++)
+        {
+            nrSurse[t] = (t == 1) ? 1 : k;
+            nrDest[t] = (t == n) ? 1 : k;
+        }
+
+        int[][][] dist = new int[n + 1][][];
+        for (int t = 1; t <= n; t++)
+        {
+            dist[t] = new int[nrSurse[t]][];
+            string dstLabel = (t == n) ? "F" : $"{k} orașe";
+            string srcLabel = (t == 1) ? "S" : $"{k} orașe";
+            Console.WriteLine($"\nEtapa {t}: {srcLabel} → {dstLabel}");
+
+            for (int i = 0; i < nrSurse[t]; i++)
+            {
+                dist[t][i] = new int[nrDest[t]];
+                string src = (t == 1) ? "S" : $"oraș {i + 1}";
+                for (int j = 0; j < nrDest[t]; j++)
+                {
+                    string dst = (t == n) ? "F" : $"oraș {j + 1}";
+                    Console.Write($"  dist({src} → {dst}) = ");
+                    string inp = Console.ReadLine().Trim();
+                    dist[t][i][j] = (inp == "-" || inp.ToLower() == "inf") ? INF
+                                  : int.Parse(inp);
+                }
+            }
+        }
+
+        RezolvaSiAfiseaza(n, k, dist, nrSurse, nrDest);
+    }
+
+    //  NUCLEUL DP
+    static void RezolvaSiAfiseaza(int n, int k,
+                                   int[][][] dist,
+                                   int[] nrSurse, int[] nrDest)
+    {
+        int[][] dp = new int[n + 2][];
+        int[][] next = new int[n + 1][];
+
+        // Condiție de frontieră: în F costul e 0
+        dp[n + 1] = new int[] { 0 };
+
+        // Umplere înapoi
+        for (int t = n; t >= 1; t--)
+        {
+            dp[t] = new int[nrSurse[t]];
+            next[t] = new int[nrSurse[t]];
+
+            for (int i = 0; i < nrSurse[t]; i++)
+            {
+                dp[t][i] = INF;
+                next[t][i] = -1;
+
+                for (int j = 0; j < nrDest[t]; j++)
+                {
+                    if (dist[t][i][j] >= INF) continue;
+                    int cost = dist[t][i][j] + dp[t + 1][j];
+                    if (cost < dp[t][i])
+                    {
+                        dp[t][i] = cost;
+                        next[t][i] = j;
+                    }
+                }
+            }
+        }
+
+        // Tabel DP 
+        Console.WriteLine("\n┌─────────────────────────────────────────────────┐");
+        Console.WriteLine("│           TABELUL DP (backward)                 │");
+        Console.WriteLine("├──────────┬──────────┬────────────┬──────────────┤");
+        Console.WriteLine("│  Etapa   │  Oraș    │  dp (min)  │  Merge în    │");
+        Console.WriteLine("├──────────┼──────────┼────────────┼──────────────┤");
+
+        for (int t = 1; t <= n; t++)
+        {
+            for (int i = 0; i < nrSurse[t]; i++)
+            {
+                string orasName = (t == 1) ? "S" : $"Oraș {i + 1}";
+                string dpVal = dp[t][i] >= INF ? "∞" : dp[t][i].ToString();
+                string destName = next[t][i] == -1 ? "-"
+                                 : (t == n ? "F" : $"Oraș {next[t][i] + 1}");
+                Console.WriteLine($"│  {t,-8}│  {orasName,-8}│  {dpVal,-10}│  {destName,-12}│");
+            }
+            if (t < n)
+                Console.WriteLine("├──────────┼──────────┼────────────┼──────────────┤");
+        }
+        Console.WriteLine("└──────────┴──────────┴────────────┴──────────────┘");
+
+        //  Rezultat 
+        Console.WriteLine();
+        if (dp[1][0] >= INF)
+        {
+            Console.WriteLine("  ✗ Nu există drum de la S la F!");
+            return;
+        }
+
+        Console.WriteLine($"  Distanța minimă totală: {dp[1][0]}");
+        Console.Write("  Drumul optim: S");
+
+        int cur = 0;
+        int distAcum = 0;
+        for (int t = 1; t <= n; t++)
+        {
+            int ales = next[t][cur];
+            int dPas = dist[t][cur][ales];
+            distAcum += dPas;
+            string dest = (t == n) ? "F" : $"Oraș {ales + 1}";
+            Console.Write($" →[{dPas}]→ {dest}");
+            cur = ales;
+        }
+        Console.WriteLine($"\n  Verificare sumă: {distAcum}");
+    }
+
+    //  MAIN
+    static void Main()
+    {
+        Console.WriteLine("╔══════════════════════════════════════════════╗");
+        Console.WriteLine("║     M6.2 — PROBLEMA DILIGENȚEI               ║");
+        Console.WriteLine("║     Programare Dinamică (backward DP)        ║");
+        Console.WriteLine("╚══════════════════════════════════════════════╝");
+        Console.WriteLine();
+        Console.WriteLine("  1. Rulează exemplul clasic (4 etape, k=3)");
+        Console.WriteLine("  2. Introdu datele manual");
+        Console.Write("\nAlegere: ");
+        string opt = Console.ReadLine().Trim();
+
+        Console.WriteLine();
+        if (opt == "1")
+            RuleazaExempluClassic();
+        else
+            RuleazaInteractiv();
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 6.2.png" alt="Output 7" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 08</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M6. 25 Se consideră un arbore cu n noduri numerotate de la 1 la n. Se știe că rădăcina arborelui este
+nodul 1. Fiecare nod i are asociat un număr natural nenul vi. Să se determine suma maximă care se
+poate obține alegând în mod convenabil o submulțime de noduri, astfel încât dacă este ales un nod i, în
+submulțime nu poate fi nici nodul tată al lui i, nici eventualii fii ai lui i.
+Date de intrare: Fișierul de intrare date.in conține pe prima linie numărul n. Pe a doua linie, separate
+prin câte un spațiu, se află numerele naturale t1,t2,...,tn, în care ti reprezintă nodul tată al nodului i.
+Pentru că 1 este rădăcina arborelui, atunci întotdeauna t1=0. Pe a treia linie, separate prin câte un
+spațiu, se află numerele naturale v1,v2,...,vn, unde vi este valoarea asociată nodului i.
+Date de ieșire: Fișierul de ieșire date.out va conține pe prima linie un singur număr natural
+reprezentând suma maximă posibilă.
+Restricții:
+- 3 <= n <= 100 000
+- 1 <= vi <= 1000
+Exemplu:
+date.in
+5
+0 1 1 3 3
+3 4 4 5 3
+date.out
+12
+Explicații:
+Arborele are 5 noduri. Nodurile 2 și 3 au ca nod tată pe 1, iar nodurile 4 și 5 au ca tată pe 3. Nodul 1
+are asociată valoarea 3, nodurile 2 și 3 au asociată valoarea 4, nodul 4 are asociată valoarea 5, iar nodul
+5 are valoarea 3 asociată.
+Obținem suma maximă 12 dacă se aleg nodurile 2, 4, 5: v2+v4+v5=4+5+3=12.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+using System.Collections.Generic;
+using System.IO;
+class SumaMaximaArbore
+{
+    static void Main()
+    {
+        // Citire date
+        int[] tata;
+        int[] val;
+        int n;
+
+        if (File.Exists("date.in"))
+        {
+            string[] lines = File.ReadAllLines("date.in");
+            n = int.Parse(lines[0].Trim());
+            tata = Array.ConvertAll(lines[1].Trim().Split(' '), int.Parse);
+            val = Array.ConvertAll(lines[2].Trim().Split(' '), int.Parse);
+        }
+        else
+        {
+            // Exemplul din problemă dacă fișierul nu există
+            Console.WriteLine("[date.in negăsit — folosim exemplul din problemă]\n");
+            n = 5;
+            tata = new int[] { 0, 1, 1, 3, 3 };
+            val = new int[] { 3, 4, 4, 5, 3 };
+        }
+
+        List<int>[] fii = new List<int>[n + 1];
+        for (int i = 1; i <= n; i++)
+            fii[i] = new List<int>();
+
+        int radacina = -1;
+        for (int i = 1; i <= n; i++)
+        {
+            int t = tata[i - 1];
+            if (t == 0)
+                radacina = i;
+            else
+                fii[t].Add(i);
+        }
+
+        int[,] dp = new int[n + 1, 2];
+
+        int[] ordine = new int[n];
+        int head = 0, tail = 0;
+        ordine[tail++] = radacina;
+        while (head < tail)
+        {
+            int nod = ordine[head++];
+            foreach (int fiu in fii[nod])
+                ordine[tail++] = fiu;
+        }
+
+        for (int idx = n - 1; idx >= 0; idx--)
+        {
+            int i = ordine[idx];
+            dp[i, 1] = val[i - 1]; 
+
+            if (fii[i].Count == 0)
+            {
+                dp[i, 0] = 0;
+            }
+            else
+            {
+                foreach (int fiu in fii[i])
+                {
+                    dp[i, 1] += dp[fiu, 0];
+                    dp[i, 0] += Math.Max(dp[fiu, 0], dp[fiu, 1]);
+                }
+            }
+        }
+
+        int sumaMaxima = Math.Max(dp[radacina, 0], dp[radacina, 1]);
+
+        // econstrucție noduri alese
+        List<int> noduriAlese = new List<int>();
+        // Parcurgem BFS și decidem pentru fiecare nod dacă e ales sau nu
+        bool[] ales = new bool[n + 1];
+        // Folosim o coadă: (nod, esteAles)
+        Queue<(int nod, bool parinteAles)> coada = new Queue<(int, bool)>();
+        bool startAles = dp[radacina, 1] > dp[radacina, 0];
+        coada.Enqueue((radacina, startAles));
+        if (startAles) ales[radacina] = true;
+
+        while (coada.Count > 0)
+        {
+            var (nod, nodAles) = coada.Dequeue();
+            if (nodAles) noduriAlese.Add(nod);
+
+            foreach (int fiu in fii[nod])
+            {
+                if (nodAles)
+                {
+                    coada.Enqueue((fiu, false));
+                }
+                else
+                {
+                    bool fiuAles = dp[fiu, 1] >= dp[fiu, 0];
+                    coada.Enqueue((fiu, fiuAles));
+                }
+            }
+        }
+        noduriAlese.Sort();
+
+        // Afișare rezultate 
+        Console.WriteLine("══════════════════════════════════════════");
+        Console.WriteLine("  M6.25 — Suma maximă pe arbore (DP)");
+        Console.WriteLine("══════════════════════════════════════════");
+        Console.WriteLine($"\n  n = {n}  |  Rădăcină = {radacina}");
+
+        Console.Write("\n  Structura arborelui (tată[i]):");
+        for (int i = 1; i <= n; i++)
+            Console.Write($"  {i}→{tata[i - 1]}");
+
+        Console.Write("\n  Valorile nodurilor (v[i]):  ");
+        for (int i = 1; i <= n; i++)
+            Console.Write($"  {i}:{val[i - 1]}");
+
+        Console.WriteLine("\n\n  Tabel DP:");
+        Console.WriteLine("  ┌────────┬──────────┬──────────┬──────────┐");
+        Console.WriteLine("  │  Nod   │  v[i]    │ dp[i][0] │ dp[i][1] │");
+        Console.WriteLine("  ├────────┼──────────┼──────────┼──────────┤");
+        for (int i = 1; i <= n; i++)
+        {
+            string marca = noduriAlese.Contains(i) ? " ✓" : "  ";
+            Console.WriteLine($"  │  {i,3}{marca} │  {val[i - 1],6}  │  {dp[i, 0],6}  │  {dp[i, 1],6}  │");
+        }
+        Console.WriteLine("  └────────┴──────────┴──────────┴──────────┘");
+        Console.WriteLine("  (✓ = nod ales în soluția optimă)");
+
+        Console.Write("\n  Noduri alese: {");
+        Console.Write(string.Join(", ", noduriAlese));
+        Console.WriteLine("}");
+
+        Console.Write("  Valori:       {");
+        Console.Write(string.Join(", ", noduriAlese.ConvertAll(x => val[x - 1])));
+        Console.WriteLine("}");
+
+        Console.WriteLine($"\n  Suma maximă = {sumaMaxima}");
+
+        // Scriere date.out
+        File.WriteAllText("date.out", sumaMaxima.ToString());
+        Console.WriteLine("\n  [Rezultatul a fost scris în date.out]");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 6.25.png" alt="Output 8" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 09</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description"> POO - 9. Gestiunea grila programe televiziune
+Se considera o firma de televiziune prin cablu care ofera un numar N de posturi.
+Fiecare canal de televiziune are o anumita frecventa pe care este receptionat, anumite zile ale saptamanii alocate
+unei eventuale revizii, un program pentru fiecare zi a saptamanii, fiecare emisiune din cadrul programului fiind
+caracterizata prin :
+1. genul emisiunii (de exemplu divertisment, cultural etc.) ;
+2. publicul ținta (tinerii sub 18 ani de exemplu) ;
+3. ora difuzarii ;
+
+4. durata ;
+5. tipul emisiunii (live sau lnregistrata).
+Sa se realizeze o aplicatie care studiaza programul fiecarui canal in parte si determina in cadrul unei saptamanii
+de emisie:
+1. tipul acestuia (de exemplu cultural daca majoritatea emisiunilor au un astfel de caracter) ;
+2. durata medie a emisiunilor ;
+3. numarul de emisiuni live, respectiv numarul de emisiuni inregistrate ;
+4. publicul tinta al respectivului post de televiziune ;
+5. determinarea orei preponderente pentru un anumit gen de emisiune.
+Pe baza acestui studiu realizat la nivelul fiecarui post de televiziune, aplicatia va genera o situatie globala
+privind tipul celor N canale difuzate de respective firma de cablu, acoperirea publicului privit prin perspectiva
+publicului declarat ca tinta.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+
+
+enum GenEmisiune { Divertisment, Cultural, Stiri, Sport, Documentar, Film, Muzica, Educativ }
+enum PublicTinta { General, TineriSub18, Adulti18_35, Adulti35_55, Seniori55Plus, Copii }
+enum ZiSaptamana { Luni, Marti, Miercuri, Joi, Vineri, Sambata, Duminica }
+
+//  CLASA DE BAZA: Emisiune
+
+abstract class Emisiune
+{
+    public string Titlu { get; set; }
+    public GenEmisiune Gen { get; set; }
+    public PublicTinta Public { get; set; }
+    public ZiSaptamana Zi { get; set; }
+    public TimeSpan Ora { get; set; }
+    public int Durata { get; set; } // minute
+
+    public abstract string Tip { get; }
+
+    protected Emisiune(string titlu, GenEmisiune gen, PublicTinta publicTinta,
+                       ZiSaptamana zi, TimeSpan ora, int durata)
+    {
+        Titlu = titlu;
+        Gen = gen;
+        Public = publicTinta;
+        Zi = zi;
+        Ora = ora;
+        Durata = durata;
+    }
+
+    public override string ToString()
+    {
+        return $"  [{Ora:hh\\:mm}] {Titlu,-25} | Gen: {Gen,-14} | Public: {Public,-14} | {Durata,3} min | {Tip}";
+    }
+}
+
+//  CLASA DERIVATA: EmisiuneLive
+
+class EmisiuneLive : Emisiune
+{
+    public override string Tip => "LIVE";
+
+    public EmisiuneLive(string titlu, GenEmisiune gen, PublicTinta publicTinta,
+                        ZiSaptamana zi, TimeSpan ora, int durata)
+        : base(titlu, gen, publicTinta, zi, ora, durata) { }
+}
+
+//  CLASA DERIVATA: EmisiuneInregistrata
+
+class EmisiuneInregistrata : Emisiune
+{
+    public override string Tip => "INREGISTRATA";
+
+    public EmisiuneInregistrata(string titlu, GenEmisiune gen, PublicTinta publicTinta,
+                                ZiSaptamana zi, TimeSpan ora, int durata)
+        : base(titlu, gen, publicTinta, zi, ora, durata) { }
+}
+
+//  CLASA: Canal
+
+class Canal
+{
+    public string Nume { get; set; }
+    public double Frecventa { get; set; } // MHz
+    public List<ZiSaptamana> ZileRevizie { get; set; }
+    private List<Emisiune> _emisiuni;
+
+    public Canal(string nume, double frecventa, List<ZiSaptamana> zileRevizie)
+    {
+        Nume = nume;
+        Frecventa = frecventa;
+        ZileRevizie = zileRevizie;
+        _emisiuni = new List<Emisiune>();
+    }
+
+    public void AdaugaEmisiune(Emisiune e) => _emisiuni.Add(e);
+
+    public IReadOnlyList<Emisiune> Emisiuni => _emisiuni.AsReadOnly();
+
+    // 1. Tipul canalului (genul dominant)
+
+    public GenEmisiune TipCanal()
+    {
+        return _emisiuni
+            .GroupBy(e => e.Gen)
+            .OrderByDescending(g => g.Count())
+            .First().Key;
+    }
+
+    // 2. Durata medie a emisiunilor
+
+    public double DurataMedie()
+    {
+        if (_emisiuni.Count == 0) return 0;
+        return _emisiuni.Average(e => e.Durata);
+    }
+
+    // 3. Nr. emisiuni live / inregistrate
+
+    public int NrLive() => _emisiuni.Count(e => e is EmisiuneLive);
+    public int NrInregistrate() => _emisiuni.Count(e => e is EmisiuneInregistrata);
+
+    // 4. Publicul tinta al canalului (publicul dominant)
+
+    public PublicTinta PublicTintaCanal()
+    {
+        return _emisiuni
+            .GroupBy(e => e.Public)
+            .OrderByDescending(g => g.Count())
+            .First().Key;
+    }
+
+    // 5. Ora preponderenta pentru un gen dat
+
+    public string OraPreponderenta(GenEmisiune gen)
+    {
+        var filtrate = _emisiuni.Where(e => e.Gen == gen).ToList();
+        if (filtrate.Count == 0) return "N/A";
+
+        var oraMax = filtrate
+            .GroupBy(e => e.Ora.Hours)
+            .OrderByDescending(g => g.Count())
+            .First().Key;
+
+        return $"{oraMax:D2}:00";
+    }
+
+    // Afisare program pe zile
+
+    public void AfiseazaProgram()
+    {
+        Console.WriteLine($"\n{'=',60}");
+        Console.WriteLine($"  CANAL: {Nume}  |  Frecventa: {Frecventa} MHz");
+        Console.WriteLine($"  Zile revizie: {string.Join(", ", ZileRevizie)}");
+        Console.WriteLine($"{'=',60}");
+
+        foreach (ZiSaptamana zi in Enum.GetValues(typeof(ZiSaptamana)))
+        {
+            var emZi = _emisiuni
+                .Where(e => e.Zi == zi)
+                .OrderBy(e => e.Ora)
+                .ToList();
+
+            if (emZi.Count == 0) continue;
+
+            Console.WriteLine($"\n  --- {zi} ---");
+            foreach (var em in emZi)
+                Console.WriteLine(em);
+        }
+    }
+
+    // Afisare statistici canal
+
+    public void AfiseazaStatistici()
+    {
+        Console.WriteLine($"\n{'=',60}");
+        Console.WriteLine($"  STATISTICI: {Nume}");
+        Console.WriteLine($"{'=',60}");
+        Console.WriteLine($"  1. Tipul canalului      : {TipCanal()}");
+        Console.WriteLine($"  2. Durata medie         : {DurataMedie():F1} minute");
+        Console.WriteLine($"  3. Emisiuni LIVE        : {NrLive()}");
+        Console.WriteLine($"     Emisiuni INREGISTRATE: {NrInregistrate()}");
+        Console.WriteLine($"  4. Public tinta         : {PublicTintaCanal()}");
+        Console.WriteLine($"\n  5. Ora preponderenta pe gen:");
+
+        var genuriPrezente = _emisiuni.Select(e => e.Gen).Distinct();
+        foreach (var gen in genuriPrezente)
+            Console.WriteLine($"     {gen,-16}: {OraPreponderenta(gen)}");
+    }
+}
+
+//  CLASA: ReteCablu
+
+class ReteCablu
+{
+    public string Nume { get; set; }
+    private List<Canal> _canale;
+
+    public ReteCablu(string nume)
+    {
+        Nume = nume;
+        _canale = new List<Canal>();
+    }
+
+    public void AdaugaCanal(Canal c) => _canale.Add(c);
+
+    public IReadOnlyList<Canal> Canale => _canale.AsReadOnly();
+
+    // Situatie globala
+
+    public void SituatieGlobala()
+    {
+        Console.WriteLine($"\n{'#',60}");
+        Console.WriteLine($"  SITUATIE GLOBALA - Reteaua: {Nume}");
+        Console.WriteLine($"  Total canale: {_canale.Count}");
+        Console.WriteLine($"{'#',60}");
+
+        // Tipurile celor N canale
+        Console.WriteLine("\n  [A] Tipul fiecarui canal:");
+        foreach (var canal in _canale)
+            Console.WriteLine($"     {canal.Nume,-20} => {canal.TipCanal()}");
+
+        // Acoperirea publicului
+        Console.WriteLine("\n  [B] Acoperirea publicului (numar emisiuni per public tinta):");
+        var toateEmisiunile = _canale.SelectMany(c => c.Emisiuni).ToList();
+
+        var publicGroups = toateEmisiunile
+            .GroupBy(e => e.Public)
+            .OrderByDescending(g => g.Count());
+
+        foreach (var g in publicGroups)
+        {
+            double procent = (double)g.Count() / toateEmisiunile.Count * 100;
+            Console.WriteLine($"     {g.Key,-18}: {g.Count(),4} emisiuni ({procent:F1}%)");
+        }
+
+        // Total live vs inregistrate in retea
+        int totalLive = _canale.Sum(c => c.NrLive());
+        int totalInreg = _canale.Sum(c => c.NrInregistrate());
+        int total = totalLive + totalInreg;
+        Console.WriteLine($"\n  [C] Total emisiuni retea : {total}");
+        Console.WriteLine($"      LIVE                 : {totalLive} ({(total > 0 ? (double)totalLive / total * 100 : 0):F1}%)");
+        Console.WriteLine($"      INREGISTRATE         : {totalInreg} ({(total > 0 ? (double)totalInreg / total * 100 : 0):F1}%)");
+
+        // Durata medie globala
+        double durGlobala = total > 0 ? toateEmisiunile.Average(e => e.Durata) : 0;
+        Console.WriteLine($"\n  [D] Durata medie globala : {durGlobala:F1} minute");
+    }
+}
+
+//  PROGRAM PRINCIPAL - Date de test
+
+class Program
+{
+    static void Main()
+    {
+        // --- Creare retea ---
+        ReteCablu retea = new ReteCablu("CableVision SRL");
+
+        // --- Canal 1: ProTV ---
+        Canal canal1 = new Canal("ProTV", 175.5,
+            new List<ZiSaptamana> { ZiSaptamana.Luni, ZiSaptamana.Miercuri });
+
+        canal1.AdaugaEmisiune(new EmisiuneLive(
+            "Stirile ProTV", GenEmisiune.Stiri, PublicTinta.General,
+            ZiSaptamana.Luni, new TimeSpan(19, 0, 0), 30));
+
+        canal1.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Las Fierbinti", GenEmisiune.Divertisment, PublicTinta.Adulti18_35,
+            ZiSaptamana.Luni, new TimeSpan(20, 30, 0), 45));
+
+        canal1.AdaugaEmisiune(new EmisiuneInregistrata(
+            "iUmor", GenEmisiune.Divertisment, PublicTinta.General,
+            ZiSaptamana.Marti, new TimeSpan(20, 0, 0), 120));
+
+        canal1.AdaugaEmisiune(new EmisiuneLive(
+            "Stirile ProTV", GenEmisiune.Stiri, PublicTinta.General,
+            ZiSaptamana.Marti, new TimeSpan(19, 0, 0), 30));
+
+        canal1.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Chefi la cutite", GenEmisiune.Divertisment, PublicTinta.Adulti35_55,
+            ZiSaptamana.Vineri, new TimeSpan(20, 30, 0), 120));
+
+        canal1.AdaugaEmisiune(new EmisiuneLive(
+            "Stirile ProTV", GenEmisiune.Stiri, PublicTinta.General,
+            ZiSaptamana.Vineri, new TimeSpan(19, 0, 0), 30));
+
+        retea.AdaugaCanal(canal1);
+
+        // --- Canal 2: TVR Cultural ---
+        Canal canal2 = new Canal("TVR Cultural", 203.5,
+            new List<ZiSaptamana> { ZiSaptamana.Joi });
+
+        canal2.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Teleenciclopedia", GenEmisiune.Cultural, PublicTinta.General,
+            ZiSaptamana.Duminica, new TimeSpan(20, 0, 0), 60));
+
+        canal2.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Istoria romanilor", GenEmisiune.Documentar, PublicTinta.Adulti35_55,
+            ZiSaptamana.Sambata, new TimeSpan(17, 0, 0), 50));
+
+        canal2.AdaugaEmisiune(new EmisiuneLive(
+            "Concert Filarmonica", GenEmisiune.Cultural, PublicTinta.Seniori55Plus,
+            ZiSaptamana.Joi, new TimeSpan(19, 30, 0), 120));
+
+        canal2.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Arta si cultura", GenEmisiune.Cultural, PublicTinta.Adulti35_55,
+            ZiSaptamana.Marti, new TimeSpan(21, 0, 0), 45));
+
+        canal2.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Documentar natura", GenEmisiune.Documentar, PublicTinta.Copii,
+            ZiSaptamana.Miercuri, new TimeSpan(16, 0, 0), 40));
+
+        retea.AdaugaCanal(canal2);
+
+        // --- Canal 3: DigiSport ---
+        Canal canal3 = new Canal("DigiSport", 226.0,
+            new List<ZiSaptamana> { ZiSaptamana.Marti, ZiSaptamana.Sambata });
+
+        canal3.AdaugaEmisiune(new EmisiuneLive(
+            "Liga 1 - Etapa 22", GenEmisiune.Sport, PublicTinta.Adulti18_35,
+            ZiSaptamana.Sambata, new TimeSpan(20, 0, 0), 105));
+
+        canal3.AdaugaEmisiune(new EmisiuneLive(
+            "Bundesliga Live", GenEmisiune.Sport, PublicTinta.Adulti18_35,
+            ZiSaptamana.Sambata, new TimeSpan(17, 0, 0), 105));
+
+        canal3.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Rezumat Champions League", GenEmisiune.Sport, PublicTinta.Adulti18_35,
+            ZiSaptamana.Miercuri, new TimeSpan(22, 30, 0), 60));
+
+        canal3.AdaugaEmisiune(new EmisiuneLive(
+            "Tenis Roland Garros", GenEmisiune.Sport, PublicTinta.General,
+            ZiSaptamana.Duminica, new TimeSpan(14, 0, 0), 180));
+
+        canal3.AdaugaEmisiune(new EmisiuneInregistrata(
+            "Fotbal - Analize", GenEmisiune.Sport, PublicTinta.Adulti35_55,
+            ZiSaptamana.Luni, new TimeSpan(20, 0, 0), 60));
+
+        retea.AdaugaCanal(canal3);
+
+        //  MENIU PRINCIPAL
+
+        bool running = true;
+        while (running)
+        {
+            Console.WriteLine("\n\n╔══════════════════════════════════════╗");
+            Console.WriteLine("║   GESTIUNE GRILA PROGRAME TV         ║");
+            Console.WriteLine("╠══════════════════════════════════════╣");
+            Console.WriteLine("║  1. Afiseaza programul unui canal    ║");
+            Console.WriteLine("║  2. Statistici canal                 ║");
+            Console.WriteLine("║  3. Situatie globala retea           ║");
+            Console.WriteLine("║  4. Lista canale                     ║");
+            Console.WriteLine("║  0. Iesire                           ║");
+            Console.WriteLine("╚══════════════════════════════════════╝");
+            Console.Write("  Optiunea ta: ");
+
+            string opt = Console.ReadLine();
+            switch (opt)
+            {
+                case "1":
+                    AfiseazaSelectieCanal(retea, c => c.AfiseazaProgram());
+                    break;
+                case "2":
+                    AfiseazaSelectieCanal(retea, c => c.AfiseazaStatistici());
+                    break;
+                case "3":
+                    retea.SituatieGlobala();
+                    break;
+                case "4":
+                    ListaCanale(retea);
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("  Optiune invalida!");
+                    break;
+            }
+        }
+    }
+
+    static void AfiseazaSelectieCanal(ReteCablu retea, Action<Canal> actiune)
+    {
+        ListaCanale(retea);
+        Console.Write("\n  Alege numarul canalului: ");
+        if (int.TryParse(Console.ReadLine(), out int idx) &&
+            idx >= 1 && idx <= retea.Canale.Count)
+        {
+            actiune(retea.Canale[idx - 1]);
+        }
+        else
+        {
+            Console.WriteLine("  Selectie invalida!");
+        }
+    }
+
+    static void ListaCanale(ReteCablu retea)
+    {
+        Console.WriteLine("\n  Canale disponibile:");
+        for (int i = 0; i < retea.Canale.Count; i++)
+            Console.WriteLine($"  {i + 1}. {retea.Canale[i].Nume} ({retea.Canale[i].Frecventa} MHz)");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M9 - POO.png" alt="Output 9" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 10</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description"> POO - 20. Magazin componente PC
+Sa se realizeze un program care sa asigure gestiunea unui magazin de componente PC (procesoare, placi de
+baza, memorii, hdd-uri etc.). Fiecare componenta confine urmatoarele campuri: cod_produs, pre{, marca,
+an_fabrica{ie, garanfie, producator, fara_provenien{a, stoc (0 - daca nu se afla in stoc, >0 - cate sunt in stoc).
+La pornirea aplicației va fi afișat urmatorul meniu:
+1. Incarcare din fișier a componentelor din magazin.
+2. Adaugare produs nou la o anumita componenta introdusa de la tastatura.
+3. Vanzare produs (stoc = stoc - 1).
+4. ștergere anumit produs dupa cod_produs.
+5. Incarcare stoc (refacerea stocului la un anumit produs, cautat in prealabil dupa cod).
+6. Sa se calculeze totalul in lei pentru o anumita categorie (suma produselor stoc*preț de la o
+anumita componenta).
+7. Afișare preț pentru anumite produse cautate dupa marca.
+8. Salvare componente in fișier.
+9. Ieșire
+Aplicația va fi implementata folosind clase șablon.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+enum GenEmisiune { Divertisment, Cultural, Stiri, Sport, Documentar, Film, Muzica, Educativ }
+enum PublicTinta { General, TineriSub18, Adulti18_35, Adulti35_55, Seniori55Plus, Copii }
+
+//  CLASA DE BAZA: ComponentaPC
+
+abstract class ComponentaPC
+{
+    public string CodProdus { get; set; }
+    public double Pret { get; set; }
+    public string Marca { get; set; }
+    public int AnFabricatie { get; set; }
+    public int Garantie { get; set; }
+    public string Producator { get; set; }
+    public string TaraProvenienta { get; set; }
+    public int Stoc { get; set; }
+
+    public abstract string Categorie { get; }
+
+    protected ComponentaPC() { }
+
+    protected ComponentaPC(string cod, double pret, string marca, int an,
+                            int garantie, string producator, string tara, int stoc)
+    {
+        CodProdus = cod;
+        Pret = pret;
+        Marca = marca;
+        AnFabricatie = an;
+        Garantie = garantie;
+        Producator = producator;
+        TaraProvenienta = tara;
+        Stoc = stoc;
+    }
+
+    public virtual string ToCsv()
+        => Categorie + ";" + CodProdus + ";" + Pret + ";" + Marca + ";" +
+           AnFabricatie + ";" + Garantie + ";" + Producator + ";" + TaraProvenienta + ";" + Stoc;
+
+    public virtual void CitesteCampuriExtra(string[] parts) { }
+
+    public override string ToString()
+        => string.Format("  [{0}] {1,-16} | {2,-14} | Pret: {3,8:F2} lei | An: {4} | Gar: {5} luni | {6,-12} | {7,-10} | Stoc: {8}",
+            CodProdus, Marca, Categorie, Pret, AnFabricatie, Garantie, Producator, TaraProvenienta, Stoc);
+}
+
+//  CLASE DERIVATE
+
+class Procesor : ComponentaPC
+{
+    public string Socket { get; set; }
+    public int NrNuclei { get; set; }
+    public double FrecventaGHz { get; set; }
+
+    public override string Categorie { get { return "Procesor"; } }
+
+    public Procesor() { }
+    public Procesor(string cod, double pret, string marca, int an, int garantie,
+                    string producator, string tara, int stoc,
+                    string socket, int nuclei, double frecventa)
+        : base(cod, pret, marca, an, garantie, producator, tara, stoc)
+    {
+        Socket = socket; NrNuclei = nuclei; FrecventaGHz = frecventa;
+    }
+
+    public override string ToCsv()
+        => base.ToCsv() + ";" + Socket + ";" + NrNuclei + ";" + FrecventaGHz;
+
+    public override void CitesteCampuriExtra(string[] p)
+    {
+        if (p.Length > 9) Socket = p[9];
+        if (p.Length > 10) NrNuclei = int.Parse(p[10]);
+        if (p.Length > 11) FrecventaGHz = double.Parse(p[11]);
+    }
+
+    public override string ToString()
+        => base.ToString() + " | Socket: " + Socket + " | Nuclei: " + NrNuclei + " | " + FrecventaGHz + " GHz";
+}
+
+class PlacaDeBaza : ComponentaPC
+{
+    public string Socket { get; set; }
+    public string Chipset { get; set; }
+    public string FormFactor { get; set; }
+
+    public override string Categorie { get { return "PlacaDeBaza"; } }
+
+    public PlacaDeBaza() { }
+    public PlacaDeBaza(string cod, double pret, string marca, int an, int garantie,
+                       string producator, string tara, int stoc,
+                       string socket, string chipset, string formFactor)
+        : base(cod, pret, marca, an, garantie, producator, tara, stoc)
+    {
+        Socket = socket; Chipset = chipset; FormFactor = formFactor;
+    }
+
+    public override string ToCsv()
+        => base.ToCsv() + ";" + Socket + ";" + Chipset + ";" + FormFactor;
+
+    public override void CitesteCampuriExtra(string[] p)
+    {
+        if (p.Length > 9) Socket = p[9];
+        if (p.Length > 10) Chipset = p[10];
+        if (p.Length > 11) FormFactor = p[11];
+    }
+
+    public override string ToString()
+        => base.ToString() + " | Socket: " + Socket + " | Chipset: " + Chipset + " | " + FormFactor;
+}
+
+class Memorie : ComponentaPC
+{
+    public int CapacitateMB { get; set; }
+    public string Tip { get; set; }
+    public int FrecventaMHz { get; set; }
+
+    public override string Categorie { get { return "Memorie"; } }
+
+    public Memorie() { }
+    public Memorie(string cod, double pret, string marca, int an, int garantie,
+                   string producator, string tara, int stoc,
+                   int capacitate, string tip, int frecventa)
+        : base(cod, pret, marca, an, garantie, producator, tara, stoc)
+    {
+        CapacitateMB = capacitate; Tip = tip; FrecventaMHz = frecventa;
+    }
+
+    public override string ToCsv()
+        => base.ToCsv() + ";" + CapacitateMB + ";" + Tip + ";" + FrecventaMHz;
+
+    public override void CitesteCampuriExtra(string[] p)
+    {
+        if (p.Length > 9) CapacitateMB = int.Parse(p[9]);
+        if (p.Length > 10) Tip = p[10];
+        if (p.Length > 11) FrecventaMHz = int.Parse(p[11]);
+    }
+
+    public override string ToString()
+        => base.ToString() + " | " + CapacitateMB + " MB | " + Tip + " | " + FrecventaMHz + " MHz";
+}
+
+class HDD : ComponentaPC
+{
+    public int CapacitateGB { get; set; }
+    public int TuratieRPM { get; set; }
+    public string Interfata { get; set; }
+
+    public override string Categorie { get { return "HDD"; } }
+
+    public HDD() { }
+    public HDD(string cod, double pret, string marca, int an, int garantie,
+               string producator, string tara, int stoc,
+               int capacitate, int turatie, string interfata)
+        : base(cod, pret, marca, an, garantie, producator, tara, stoc)
+    {
+        CapacitateGB = capacitate; TuratieRPM = turatie; Interfata = interfata;
+    }
+
+    public override string ToCsv()
+        => base.ToCsv() + ";" + CapacitateGB + ";" + TuratieRPM + ";" + Interfata;
+
+    public override void CitesteCampuriExtra(string[] p)
+    {
+        if (p.Length > 9) CapacitateGB = int.Parse(p[9]);
+        if (p.Length > 10) TuratieRPM = int.Parse(p[10]);
+        if (p.Length > 11) Interfata = p[11];
+    }
+
+    public override string ToString()
+        => base.ToString() + " | " + CapacitateGB + " GB | " + TuratieRPM + " RPM | " + Interfata;
+}
+
+class PlacaVideo : ComponentaPC
+{
+    public int VRAM_GB { get; set; }
+    public string Chip { get; set; }
+    public string Interfata { get; set; }
+
+    public override string Categorie { get { return "PlacaVideo"; } }
+
+    public PlacaVideo() { }
+    public PlacaVideo(string cod, double pret, string marca, int an, int garantie,
+                      string producator, string tara, int stoc,
+                      int vram, string chip, string interfata)
+        : base(cod, pret, marca, an, garantie, producator, tara, stoc)
+    {
+        VRAM_GB = vram; Chip = chip; Interfata = interfata;
+    }
+
+    public override string ToCsv()
+        => base.ToCsv() + ";" + VRAM_GB + ";" + Chip + ";" + Interfata;
+
+    public override void CitesteCampuriExtra(string[] p)
+    {
+        if (p.Length > 9) VRAM_GB = int.Parse(p[9]);
+        if (p.Length > 10) Chip = p[10];
+        if (p.Length > 11) Interfata = p[11];
+    }
+
+    public override string ToString()
+        => base.ToString() + " | VRAM: " + VRAM_GB + " GB | Chip: " + Chip + " | " + Interfata;
+}
+
+//  CLASA SABLON: Depozit<T>
+
+class Depozit<T> where T : ComponentaPC
+{
+    private List<T> _produse = new List<T>();
+
+    public IReadOnlyList<T> Produse { get { return _produse.AsReadOnly(); } }
+
+    public void Adauga(T produs) { _produse.Add(produs); }
+
+    public bool Sterge(string cod)
+    {
+        T p = _produse.FirstOrDefault(x => x.CodProdus == cod);
+        if (p == null) return false;
+        _produse.Remove(p);
+        return true;
+    }
+
+    public T Cauta(string cod)
+        => _produse.FirstOrDefault(x => x.CodProdus == cod);
+
+    public bool Vinde(string cod)
+    {
+        T p = Cauta(cod);
+        if (p == null || p.Stoc <= 0) return false;
+        p.Stoc--;
+        return true;
+    }
+
+    public bool IncarcaStoc(string cod, int cantitate)
+    {
+        T p = Cauta(cod);
+        if (p == null) return false;
+        p.Stoc += cantitate;
+        return true;
+    }
+
+    public double TotalValoare()
+        => _produse.Sum(p => p.Stoc * p.Pret);
+
+    public List<T> CautaDupaMarca(string marca)
+        => _produse.Where(p => p.Marca.IndexOf(marca, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+    public void Afiseaza()
+    {
+        if (!_produse.Any()) { Console.WriteLine("  (depozit gol)"); return; }
+        foreach (T p in _produse.OrderBy(x => x.Marca))
+            Console.WriteLine(p);
+    }
+}
+
+//  CLASA: MagazinPC
+
+class MagazinPC
+{
+    private Depozit<Procesor> _procesoare = new Depozit<Procesor>();
+    private Depozit<PlacaDeBaza> _placi = new Depozit<PlacaDeBaza>();
+    private Depozit<Memorie> _memorii = new Depozit<Memorie>();
+    private Depozit<HDD> _hdduri = new Depozit<HDD>();
+    private Depozit<PlacaVideo> _placiVideo = new Depozit<PlacaVideo>();
+
+    private string AlegeCategorie()
+    {
+        Console.WriteLine("\n  Categorii:");
+        Console.WriteLine("  1. Procesor");
+        Console.WriteLine("  2. Placa de baza");
+        Console.WriteLine("  3. Memorie");
+        Console.WriteLine("  4. HDD / SSD");
+        Console.WriteLine("  5. Placa video");
+        Console.Write("  Alege categoria: ");
+        return Console.ReadLine().Trim();
+    }
+
+    private string Citeste(string prompt)
+    {
+        Console.Write("  " + prompt + ": ");
+        return Console.ReadLine().Trim();
+    }
+
+    private int CitesteInt(string prompt)
+    {
+        Console.Write("  " + prompt + ": ");
+        int v;
+        return int.TryParse(Console.ReadLine(), out v) ? v : 0;
+    }
+
+    private double CitesteDouble(string prompt)
+    {
+        Console.Write("  " + prompt + ": ");
+        double v;
+        return double.TryParse(Console.ReadLine(), out v) ? v : 0;
+    }
+
+    // 1. Incarcare din fisier
+
+    public void IncarcaDinFisier()
+    {
+        Console.Write("  Nume fisier (implicit: magazin.csv): ");
+        string f = Console.ReadLine().Trim();
+        if (string.IsNullOrEmpty(f)) f = "magazin.csv";
+
+        if (!File.Exists(f))
+        {
+            Console.WriteLine("  Fisierul nu exista! Se creeaza date demo.");
+            CreazaDateDemo();
+            SalveazaInFisier(f);
+            Console.WriteLine("  Salvat demo in '" + f + "'.");
+            return;
+        }
+
+        int nr = 0;
+        foreach (string linie in File.ReadAllLines(f))
+        {
+            if (string.IsNullOrWhiteSpace(linie) || linie.StartsWith("#")) continue;
+            string[] p = linie.Split(';');
+            if (p.Length < 9) continue;
+
+            string cat = p[0];
+            string cod = p[1];
+            double pret = double.Parse(p[2]);
+            string marca = p[3];
+            int an = int.Parse(p[4]);
+            int gar = int.Parse(p[5]);
+            string prod = p[6];
+            string tara = p[7];
+            int stoc = int.Parse(p[8]);
+
+            if (cat == "Procesor")
+            {
+                Procesor obj = new Procesor(cod, pret, marca, an, gar, prod, tara, stoc, "", 0, 0);
+                obj.CitesteCampuriExtra(p);
+                _procesoare.Adauga(obj);
+            }
+            else if (cat == "PlacaDeBaza")
+            {
+                PlacaDeBaza obj = new PlacaDeBaza(cod, pret, marca, an, gar, prod, tara, stoc, "", "", "");
+                obj.CitesteCampuriExtra(p);
+                _placi.Adauga(obj);
+            }
+            else if (cat == "Memorie")
+            {
+                Memorie obj = new Memorie(cod, pret, marca, an, gar, prod, tara, stoc, 0, "", 0);
+                obj.CitesteCampuriExtra(p);
+                _memorii.Adauga(obj);
+            }
+            else if (cat == "HDD")
+            {
+                HDD obj = new HDD(cod, pret, marca, an, gar, prod, tara, stoc, 0, 0, "");
+                obj.CitesteCampuriExtra(p);
+                _hdduri.Adauga(obj);
+            }
+            else if (cat == "PlacaVideo")
+            {
+                PlacaVideo obj = new PlacaVideo(cod, pret, marca, an, gar, prod, tara, stoc, 0, "", "");
+                obj.CitesteCampuriExtra(p);
+                _placiVideo.Adauga(obj);
+            }
+            nr++;
+        }
+        Console.WriteLine("  Incarcate " + nr + " produse din '" + f + "'.");
+    }
+
+    // 2. Adaugare produs nou
+
+    public void AdaugaProdus()
+    {
+        string cat = AlegeCategorie();
+        string cod = Citeste("Cod produs");
+        double pret = CitesteDouble("Pret (lei)");
+        string marca = Citeste("Marca");
+        int an = CitesteInt("An fabricatie");
+        int gar = CitesteInt("Garantie (luni)");
+        string prod = Citeste("Producator");
+        string tara = Citeste("Tara provenienta");
+        int stoc = CitesteInt("Stoc initial");
+
+        if (cat == "1")
+        {
+            string socket = Citeste("Socket");
+            int nuclei = CitesteInt("Nr. nuclei");
+            double ghz = CitesteDouble("Frecventa (GHz)");
+            _procesoare.Adauga(new Procesor(cod, pret, marca, an, gar, prod, tara, stoc, socket, nuclei, ghz));
+        }
+        else if (cat == "2")
+        {
+            string socket = Citeste("Socket");
+            string chipset = Citeste("Chipset");
+            string formFactor = Citeste("Form Factor (ATX/mATX)");
+            _placi.Adauga(new PlacaDeBaza(cod, pret, marca, an, gar, prod, tara, stoc, socket, chipset, formFactor));
+        }
+        else if (cat == "3")
+        {
+            int cap = CitesteInt("Capacitate (MB)");
+            string tip = Citeste("Tip (DDR4/DDR5)");
+            int mhz = CitesteInt("Frecventa (MHz)");
+            _memorii.Adauga(new Memorie(cod, pret, marca, an, gar, prod, tara, stoc, cap, tip, mhz));
+        }
+        else if (cat == "4")
+        {
+            int capGB = CitesteInt("Capacitate (GB)");
+            int rpm = CitesteInt("Turatie RPM (0 pt SSD)");
+            string iface = Citeste("Interfata (SATA/NVMe)");
+            _hdduri.Adauga(new HDD(cod, pret, marca, an, gar, prod, tara, stoc, capGB, rpm, iface));
+        }
+        else if (cat == "5")
+        {
+            int vram = CitesteInt("VRAM (GB)");
+            string chip = Citeste("Chip GPU");
+            string iface = Citeste("Interfata (PCIe 4.0)");
+            _placiVideo.Adauga(new PlacaVideo(cod, pret, marca, an, gar, prod, tara, stoc, vram, chip, iface));
+        }
+        else
+        {
+            Console.WriteLine("  Categorie invalida!"); return;
+        }
+        Console.WriteLine("  Produs adaugat cu succes!");
+    }
+
+    // 3. Vanzare produs
+
+    public void VindeProdus()
+    {
+        string cod = Citeste("Cod produs de vandut");
+        bool ok = _procesoare.Vinde(cod) || _placi.Vinde(cod) ||
+                  _memorii.Vinde(cod) || _hdduri.Vinde(cod) ||
+                  _placiVideo.Vinde(cod);
+        Console.WriteLine(ok ? "  Vanzare inregistrata. Stoc decrementat." : "  Produs negasit sau stoc epuizat!");
+    }
+
+    // 4. Stergere produs
+
+    public void StergeProdus()
+    {
+        string cod = Citeste("Cod produs de sters");
+        bool ok = _procesoare.Sterge(cod) || _placi.Sterge(cod) ||
+                  _memorii.Sterge(cod) || _hdduri.Sterge(cod) ||
+                  _placiVideo.Sterge(cod);
+        Console.WriteLine(ok ? "  Produs sters." : "  Codul nu a fost gasit!");
+    }
+
+    // 5. Incarcare stoc
+
+    public void IncarcaStoc()
+    {
+        string cod = Citeste("Cod produs");
+        int qty = CitesteInt("Cantitate de adaugat");
+        bool ok = _procesoare.IncarcaStoc(cod, qty) || _placi.IncarcaStoc(cod, qty) ||
+                  _memorii.IncarcaStoc(cod, qty) || _hdduri.IncarcaStoc(cod, qty) ||
+                  _placiVideo.IncarcaStoc(cod, qty);
+        Console.WriteLine(ok ? "  Stoc actualizat (+" + qty + ")." : "  Codul nu a fost gasit!");
+    }
+
+    // 6. Total valoare categorie
+
+    public void TotalCategorie()
+    {
+        string cat = AlegeCategorie();
+        double total = -1;
+        if (cat == "1") total = _procesoare.TotalValoare();
+        else if (cat == "2") total = _placi.TotalValoare();
+        else if (cat == "3") total = _memorii.TotalValoare();
+        else if (cat == "4") total = _hdduri.TotalValoare();
+        else if (cat == "5") total = _placiVideo.TotalValoare();
+
+        if (total < 0) { Console.WriteLine("  Categorie invalida!"); return; }
+        Console.WriteLine("  Valoare totala stoc: " + total.ToString("F2") + " lei");
+    }
+
+    // 7. Cautare dupa marca
+
+    public void CautaDupaMarca()
+    {
+        string marca = Citeste("Marca cautata");
+        List<ComponentaPC> rezultate = new List<ComponentaPC>();
+        rezultate.AddRange(_procesoare.CautaDupaMarca(marca));
+        rezultate.AddRange(_placi.CautaDupaMarca(marca));
+        rezultate.AddRange(_memorii.CautaDupaMarca(marca));
+        rezultate.AddRange(_hdduri.CautaDupaMarca(marca));
+        rezultate.AddRange(_placiVideo.CautaDupaMarca(marca));
+
+        if (rezultate.Count == 0)
+        { Console.WriteLine("  Niciun produs gasit."); return; }
+
+        Console.WriteLine("\n  Produse cu marca '" + marca + "':");
+        foreach (ComponentaPC p in rezultate.OrderBy(x => x.Pret))
+            Console.WriteLine("  [" + p.CodProdus + "] " + p.Marca + " | " + p.Categorie + " | Pret: " + p.Pret.ToString("F2") + " lei | Stoc: " + p.Stoc);
+    }
+
+    // 8. Salvare in fisier
+
+    public void SalveazaInFisier(string fisier = null)
+    {
+        if (fisier == null)
+        {
+            Console.Write("  Nume fisier (implicit: magazin.csv): ");
+            fisier = Console.ReadLine().Trim();
+            if (string.IsNullOrEmpty(fisier)) fisier = "magazin.csv";
+        }
+
+        List<string> linii = new List<string>();
+        linii.Add("# MagazinPC - categorie;cod;pret;marca;an;garantie;producator;tara;stoc;[extra]");
+        foreach (Procesor p in _procesoare.Produse) linii.Add(p.ToCsv());
+        foreach (PlacaDeBaza p in _placi.Produse) linii.Add(p.ToCsv());
+        foreach (Memorie p in _memorii.Produse) linii.Add(p.ToCsv());
+        foreach (HDD p in _hdduri.Produse) linii.Add(p.ToCsv());
+        foreach (PlacaVideo p in _placiVideo.Produse) linii.Add(p.ToCsv());
+
+        File.WriteAllLines(fisier, linii);
+        Console.WriteLine("  Salvate " + (linii.Count - 1) + " produse in '" + fisier + "'.");
+    }
+
+    // 9. Afisare toate produsele
+
+    public void AfiseazaToate()
+    {
+        Console.WriteLine("\n  === PROCESOARE ==="); _procesoare.Afiseaza();
+        Console.WriteLine("\n  === PLACI DE BAZA ==="); _placi.Afiseaza();
+        Console.WriteLine("\n  === MEMORII ==="); _memorii.Afiseaza();
+        Console.WriteLine("\n  === HDD / SSD ==="); _hdduri.Afiseaza();
+        Console.WriteLine("\n  === PLACI VIDEO ==="); _placiVideo.Afiseaza();
+    }
+
+    // Date demo
+
+    private void CreazaDateDemo()
+    {
+        _procesoare.Adauga(new Procesor("CPU001", 1299.99, "Intel Core i5-13600K", 2023, 36, "Intel", "SUA", 5, "LGA1700", 14, 3.5));
+        _procesoare.Adauga(new Procesor("CPU002", 1899.99, "AMD Ryzen 7 7800X3D", 2023, 36, "AMD", "SUA", 3, "AM5", 8, 4.5));
+        _procesoare.Adauga(new Procesor("CPU003", 699.99, "Intel Core i3-12100", 2022, 36, "Intel", "SUA", 8, "LGA1700", 4, 3.3));
+        _placi.Adauga(new PlacaDeBaza("MB001", 749.99, "ASUS ROG Strix Z790", 2023, 36, "ASUS", "Taiwan", 4, "LGA1700", "Z790", "ATX"));
+        _placi.Adauga(new PlacaDeBaza("MB002", 549.99, "MSI MAG B650", 2022, 36, "MSI", "Taiwan", 6, "AM5", "B650", "mATX"));
+        _memorii.Adauga(new Memorie("RAM001", 349.99, "Kingston Fury Beast", 2022, 36, "Kingston", "Taiwan", 10, 16384, "DDR5", 5600));
+        _memorii.Adauga(new Memorie("RAM002", 219.99, "Corsair Vengeance", 2021, 36, "Corsair", "SUA", 15, 8192, "DDR4", 3200));
+        _hdduri.Adauga(new HDD("HDD001", 449.99, "Samsung 990 Pro", 2023, 60, "Samsung", "Coreea", 8, 2048, 0, "NVMe"));
+        _hdduri.Adauga(new HDD("HDD002", 199.99, "WD Blue 1TB", 2020, 36, "WD", "SUA", 12, 1024, 7200, "SATA"));
+        _placiVideo.Adauga(new PlacaVideo("GPU001", 3499.99, "NVIDIA RTX 4070", 2023, 36, "NVIDIA", "SUA", 3, 12, "AD104", "PCIe 4.0"));
+        _placiVideo.Adauga(new PlacaVideo("GPU002", 1999.99, "AMD RX 7600", 2023, 36, "AMD", "SUA", 5, 8, "Navi 33", "PCIe 4.0"));
+    }
+}
+
+//  PROGRAM PRINCIPAL
+
+class Program
+{
+    static void Main()
+    {
+        MagazinPC magazin = new MagazinPC();
+        bool running = true;
+
+        while (running)
+        {
+            Console.WriteLine("\n╔══════════════════════════════════════════╗");
+            Console.WriteLine("║        MAGAZIN COMPONENTE PC             ║");
+            Console.WriteLine("╠══════════════════════════════════════════╣");
+            Console.WriteLine("║  1. Incarcare din fisier                 ║");
+            Console.WriteLine("║  2. Adaugare produs nou                  ║");
+            Console.WriteLine("║  3. Vanzare produs (stoc - 1)            ║");
+            Console.WriteLine("║  4. Stergere produs dupa cod             ║");
+            Console.WriteLine("║  5. Incarcare stoc                       ║");
+            Console.WriteLine("║  6. Total valoare categorie              ║");
+            Console.WriteLine("║  7. Cautare dupa marca (afisare pret)    ║");
+            Console.WriteLine("║  8. Salvare in fisier                    ║");
+            Console.WriteLine("║  9. Afisare toate produsele              ║");
+            Console.WriteLine("║  0. Iesire                               ║");
+            Console.WriteLine("╚══════════════════════════════════════════╝");
+            Console.Write("  Optiunea ta: ");
+
+            string opt = Console.ReadLine().Trim();
+            if (opt == "1") magazin.IncarcaDinFisier();
+            else if (opt == "2") magazin.AdaugaProdus();
+            else if (opt == "3") magazin.VindeProdus();
+            else if (opt == "4") magazin.StergeProdus();
+            else if (opt == "5") magazin.IncarcaStoc();
+            else if (opt == "6") magazin.TotalCategorie();
+            else if (opt == "7") magazin.CautaDupaMarca();
+            else if (opt == "8") magazin.SalveazaInFisier();
+            else if (opt == "9") magazin.AfiseazaToate();
+            else if (opt == "0") running = false;
+            else Console.WriteLine("  Optiune invalida!");
+        }
+
+        Console.WriteLine("\n  La revedere!");
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 20-POO.png" alt="Output 10" class="output-img">
+          </div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Problema 11</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        <p class="problem-description">M3. 17 Să se determine 5 numere de câte n cifre, fiecare cifră putând fi 1 sau 2, astfel încât oricare
+dintre aceste 5 numere să coincidă exact în m poziții și să nu existe o poziție în care să apară aceeași
+cifră în toate cele 5 numere.</p>
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">Solutie C#</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+
+class Program
+{
+    static int n, m;
+    static int[,] sol; 
+    static bool gasit = false;
+
+
+    static bool Verifica(int nivel)
+    {
+        // 1. Oricare doua numere sa coincida exact in m pozitii
+
+        for (int a = 0; a < 5; a++)
+        {
+            for (int b = a + 1; b < 5; b++)
+            {
+                // Numaram coincidentele in primele 'nivel' pozitii
+                int coincidente = 0;
+                for (int pos = 0; pos < nivel; pos++)
+                    if (sol[pos, a] == sol[pos, b])
+                        coincidente++;
+
+                // Daca am completat toate cifrele: exact m coincidente
+                if (nivel == n && coincidente != m)
+                    return false;
+
+
+                int ramase = n - nivel;
+                if (coincidente + ramase < m) return false;  
+                if (coincidente > m) return false;  
+            }
+        }
+
+        // 2. Sa nu existe o pozitie in care aceeasi cifra apare in TOATE 5 numerele
+        for (int pos = 0; pos < nivel; pos++)
+        {
+            bool totiEgali = true;
+            for (int nr = 1; nr < 5; nr++)
+                if (sol[pos, nr] != sol[pos, 0])
+                { totiEgali = false; break; }
+
+            if (totiEgali) return false;
+        }
+
+        return true;
+    }
+
+    // Backtracking: completam cifra 'nivel' pentru toate cele 5 numere
+    static void Back(int nivel)
+    {
+        if (gasit) return;
+
+        if (nivel == n)
+        {
+            if (Verifica(nivel))
+                gasit = true;
+            return;
+        }
+
+        for (int mask = 0; mask < 32 && !gasit; mask++)
+        {
+            for (int nr = 0; nr < 5; nr++)
+                sol[nivel, nr] = ((mask >> nr) & 1) == 0 ? 1 : 2;
+
+            if (Verifica(nivel + 1))
+                Back(nivel + 1);
+        }
+    }
+
+    static void Main()
+    {
+        Console.Write("Introduceti n (numarul de cifre): ");
+        n = int.Parse(Console.ReadLine().Trim());
+
+        Console.Write("Introduceti m (coincidente exacte intre oricare 2 numere): ");
+        m = int.Parse(Console.ReadLine().Trim());
+
+        // Validari
+        if (m < 0 || m > n)
+        {
+            Console.WriteLine("Eroare: m trebuie sa fie intre 0 si n!");
+            return;
+        }
+
+        sol = new int[n, 5];
+
+        Console.WriteLine("\nSe cauta solutia...");
+        Back(0);
+
+        if (gasit)
+        {
+            Console.WriteLine("\nSolutie gasita:\n");
+            Console.WriteLine("  Pos:  " + string.Join("  ", System.Linq.Enumerable.Range(1, n)));
+            Console.WriteLine("  " + new string('-', 4 + n * 3));
+
+            for (int nr = 0; nr < 5; nr++)
+            {
+                Console.Write("  Nr" + (nr + 1) + ": ");
+                for (int pos = 0; pos < n; pos++)
+                    Console.Write(sol[pos, nr] + "  ");
+                Console.WriteLine();
+            }
+
+            // Verificare afisata
+            Console.WriteLine("\n  Verificare coincidente intre perechi:");
+            for (int a = 0; a < 5; a++)
+            {
+                for (int b = a + 1; b < 5; b++)
+                {
+                    int coin = 0;
+                    for (int pos = 0; pos < n; pos++)
+                        if (sol[pos, a] == sol[pos, b]) coin++;
+                    Console.WriteLine("  Nr" + (a + 1) + " si Nr" + (b + 1) + ": " + coin + " coincidente");
+                }
+            }
+
+            Console.WriteLine("\n  Verificare pozitii cu aceeasi cifra in toate 5:");
+            bool existaPozitie = false;
+            for (int pos = 0; pos < n; pos++)
+            {
+                bool totiEgali = true;
+                for (int nr = 1; nr < 5; nr++)
+                    if (sol[pos, nr] != sol[pos, 0]) { totiEgali = false; break; }
+                if (totiEgali) { existaPozitie = true; Console.WriteLine("  Pozitia " + (pos + 1) + " are cifra identica!"); }
+            }
+            if (!existaPozitie)
+                Console.WriteLine("  Nicio pozitie cu aceeasi cifra in toate 5. OK!");
+        }
+        else
+        {
+            Console.WriteLine("\nNu exista solutie pentru n=" + n + " si m=" + m + "!");
+        }
+    }
+}</code></pre>
+            </details>
+          </div>
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\M 3.17 - sarcina individuala.png" alt="Output 11" class="output-img">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 · Portofoliu Academic · Realizat manual</p>
+  </footer>
+
+</body>
+</html>

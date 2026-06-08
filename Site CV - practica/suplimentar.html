@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portofoliu | Sarcina Suplimentara</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">P.F.</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">CV</a>
+      <a href="problems.html" class="nav-link">Probleme</a>
+      <a href="constructors.html" class="nav-link">Constructori C#</a>
+      <a href="suplimentar.html" class="nav-link active">Sarcina Suplimentara</a>
+      <a href="declaratie.html" class="nav-link">Declaratie</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title">Sarcina Suplimentară</h1>
+    <p class="page-subtitle">Studiu de caz — Analiza si implementarea cerintelor extinse</p>
+
+    <div class="problems-list">
+      <div class="problem-card">
+        <div class="problem-header">
+          <h2 class="problem-title">Studiu de Caz</h2>
+          <div class="problem-meta">
+          </div>
+        </div>
+        
+        <div class="problem-grid-inner">
+          <div class="code-wrapper">
+            <h4 class="section-subtitle">
+Sarcina suplimentară - Studiu de caz</h4>
+            <details class="code-accordion">
+              <summary class="btn-vezi-cod"><i class="fas fa-code"></i> Afiseaza Codul Sursa</summary>
+              <pre><code>using System;
+using System.Collections.Generic;
+
+//  CLASA DE BAZA: Persoana
+
+abstract class Persoana
+{
+    private string idnp;
+    protected static int AnCurent = DateTime.Now.Year;
+
+    protected string Nume { get; set; }
+    protected string Prenume { get; set; }
+    protected int AnNastere { get; set; }
+
+    // Proprietate publica pentru acces la nume complet
+    public string NumeComplet { get { return Nume + " " + Prenume; } }
+
+    protected Persoana(string nume, string prenume, int anNastere)
+    {
+        Nume = nume;
+        Prenume = prenume;
+        AnNastere = anNastere;
+        idnp = Guid.NewGuid().ToString("N").Substring(0, 13);
+    }
+
+    public int Varsta() { return AnCurent - AnNastere; }
+
+    public virtual void Afisare()
+    {
+        Console.WriteLine("  Nume    : " + Nume + " " + Prenume);
+        Console.WriteLine("  An nasc.: " + AnNastere + "  (varsta: " + Varsta() + ")");
+    }
+
+    public virtual double Salariu() { return 0; }
+    public virtual double Bursa() { return 0; }
+    public abstract int Tip();
+    public abstract void Citire();
+}
+
+//  CLASA: Angajat
+
+class Angajat : Persoana
+{
+    protected int NrOre { get; set; }
+    protected int PlataOra { get; set; }
+
+    public Angajat(string nume, string prenume, int anNastere,
+                   int nrOre, int plataOra)
+        : base(nume, prenume, anNastere)
+    {
+        NrOre = nrOre;
+        PlataOra = plataOra;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [ANGAJAT]");
+        base.Afisare();
+        Console.WriteLine("  Ore lucrate : " + NrOre);
+        Console.WriteLine("  Plata/ora   : " + PlataOra + " MDL");
+        Console.WriteLine("  Salariu     : " + Salariu() + " MDL");
+    }
+
+    public override void Citire()
+    {
+        Console.Write("  Nume: "); Nume = Console.ReadLine();
+        Console.Write("  Prenume: "); Prenume = Console.ReadLine();
+        Console.Write("  An nastere: "); AnNastere = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); NrOre = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); PlataOra = int.Parse(Console.ReadLine());
+    }
+
+    public override double Salariu() { return NrOre * PlataOra; }
+    public override int Tip() { return 2; }
+}
+
+//  CLASA: Administrator
+
+class Administrator : Angajat
+{
+    protected int AnAngajare { get; set; }
+    protected int GradCalificare { get; set; }
+
+    public Administrator(string nume, string prenume, int anNastere,
+                         int nrOre, int plataOra, int anAngajare, int grad)
+        : base(nume, prenume, anNastere, nrOre, plataOra)
+    {
+        AnAngajare = anAngajare;
+        GradCalificare = grad;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [ADMINISTRATOR]");
+        base.Afisare();
+        Console.WriteLine("  An angajare : " + AnAngajare);
+        Console.WriteLine("  Grad calif. : " + GradCalificare);
+        Console.WriteLine("  Salariu     : " + Salariu().ToString("F2") + " MDL");
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  An angajare: "); AnAngajare = int.Parse(Console.ReadLine());
+        Console.Write("  Grad calificare(1-5): "); GradCalificare = int.Parse(Console.ReadLine());
+    }
+
+    public override double Salariu() { return NrOre * PlataOra * (1 + GradCalificare * 0.10); }
+    public override int Tip() { return 4; }
+}
+
+//  CLASA: Student
+
+class Student : Persoana
+{
+    protected string Grupa { get; set; }
+    protected float Media { get; set; }
+    private const double BursaBaza = 1200;
+
+    public Student(string nume, string prenume, int anNastere,
+                   string grupa, float media)
+        : base(nume, prenume, anNastere)
+    {
+        Grupa = grupa;
+        Media = media;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [STUDENT]");
+        base.Afisare();
+        Console.WriteLine("  Grupa : " + Grupa);
+        Console.WriteLine("  Media : " + Media.ToString("F2"));
+        Console.WriteLine("  Bursa : " + Bursa() + " MDL");
+    }
+
+    public override void Citire()
+    {
+        Console.Write("  Nume: "); Nume = Console.ReadLine();
+        Console.Write("  Prenume: "); Prenume = Console.ReadLine();
+        Console.Write("  An nastere: "); AnNastere = int.Parse(Console.ReadLine());
+        Console.Write("  Grupa: "); Grupa = Console.ReadLine();
+        Console.Write("  Media: "); Media = float.Parse(Console.ReadLine());
+    }
+
+    public override double Bursa()
+    {
+        return Media >= 7 ? BursaBaza + (Media - 7) * 100 : 0;
+    }
+    public override int Tip() { return 1; }
+}
+
+//  CLASA: StudentAngajat
+
+class StudentAngajat : Student
+{
+    private int NrOre { get; set; }
+    private int PlataOra { get; set; }
+
+    public StudentAngajat(string nume, string prenume, int anNastere,
+                          string grupa, float media, int nrOre, int plataOra)
+        : base(nume, prenume, anNastere, grupa, media)
+    {
+        NrOre = nrOre;
+        PlataOra = plataOra;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [STUDENT ANGAJAT]");
+        Console.WriteLine("  Nume    : " + Nume + " " + Prenume);
+        Console.WriteLine("  An nasc.: " + AnNastere + "  (varsta: " + Varsta() + ")");
+        Console.WriteLine("  Grupa   : " + Grupa + "  |  Media: " + Media.ToString("F2"));
+        Console.WriteLine("  Ore     : " + NrOre + "  |  Plata/ora: " + PlataOra + " MDL");
+        Console.WriteLine("  Salariu : " + Salariu() + " MDL  |  Bursa: " + Bursa() + " MDL");
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Nr. ore lucrate: "); NrOre = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); PlataOra = int.Parse(Console.ReadLine());
+    }
+
+    public override double Salariu() { return NrOre * PlataOra; }
+    public override int Tip() { return 3; }
+}
+
+//  EXTENSII (pagina 7 din PDF)
+
+
+class Contabil : Angajat
+{
+    private string Departament { get; set; }
+
+    public Contabil(string nume, string prenume, int anNastere,
+                    int nrOre, int plataOra, string departament)
+        : base(nume, prenume, anNastere, nrOre, plataOra)
+    {
+        Departament = departament;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [CONTABIL]");
+        base.Afisare();
+        Console.WriteLine("  Departament : " + Departament);
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Departament: "); Departament = Console.ReadLine();
+    }
+
+    public override int Tip() { return 5; }
+}
+
+class Lector : Angajat
+{
+    protected string TitluDidactic { get; set; }
+
+    public Lector(string nume, string prenume, int anNastere,
+                  int nrOre, int plataOra, string titlu)
+        : base(nume, prenume, anNastere, nrOre, plataOra)
+    {
+        TitluDidactic = titlu;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [LECTOR]");
+        base.Afisare();
+        Console.WriteLine("  Titlu didactic: " + TitluDidactic);
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Titlu didactic: "); TitluDidactic = Console.ReadLine();
+    }
+
+    public override int Tip() { return 6; }
+}
+
+class SefLaborator : Lector
+{
+    private string NumeLaborator { get; set; }
+
+    public SefLaborator(string nume, string prenume, int anNastere,
+                        int nrOre, int plataOra, string titlu, string laborator)
+        : base(nume, prenume, anNastere, nrOre, plataOra, titlu)
+    {
+        NumeLaborator = laborator;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [SEF LABORATOR]");
+        base.Afisare();
+        Console.WriteLine("  Laborator: " + NumeLaborator);
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Laborator: "); NumeLaborator = Console.ReadLine();
+    }
+
+    public override int Tip() { return 7; }
+}
+
+class ConsultantPartTime : Angajat
+{
+    private string Specialitate { get; set; }
+
+    public ConsultantPartTime(string nume, string prenume, int anNastere,
+                               int nrOre, int plataOra, string specialitate)
+        : base(nume, prenume, anNastere, nrOre, plataOra)
+    {
+        Specialitate = specialitate;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [CONSULTANT PART-TIME]");
+        base.Afisare();
+        Console.WriteLine("  Specialitate: " + Specialitate);
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Specialitate: "); Specialitate = Console.ReadLine();
+    }
+
+    public override double Salariu() { return NrOre * PlataOra * 0.6; }
+    public override int Tip() { return 8; }
+}
+
+class JuristPartTime : Angajat
+{
+    private string Specializare { get; set; }
+
+    public JuristPartTime(string nume, string prenume, int anNastere,
+                           int nrOre, int plataOra, string specializare)
+        : base(nume, prenume, anNastere, nrOre, plataOra)
+    {
+        Specializare = specializare;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [JURIST PART-TIME]");
+        base.Afisare();
+        Console.WriteLine("  Specializare: " + Specializare);
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Specializare: "); Specializare = Console.ReadLine();
+    }
+
+    public override double Salariu() { return NrOre * PlataOra * 0.6; }
+    public override int Tip() { return 9; }
+}
+
+class StudentBursier : Student
+{
+    private double BursaSuplimentara { get; set; }
+
+    public StudentBursier(string nume, string prenume, int anNastere,
+                           string grupa, float media, double bursaSupl)
+        : base(nume, prenume, anNastere, grupa, media)
+    {
+        BursaSuplimentara = bursaSupl;
+    }
+
+    public override void Afisare()
+    {
+        Console.WriteLine("  [STUDENT BURSIER]");
+        base.Afisare();
+        Console.WriteLine("  Bursa suplim.: " + BursaSuplimentara + " MDL");
+        Console.WriteLine("  Total bursa  : " + Bursa() + " MDL");
+    }
+
+    public override void Citire()
+    {
+        base.Citire();
+        Console.Write("  Bursa suplimentara: "); BursaSuplimentara = double.Parse(Console.ReadLine());
+    }
+
+    public override double Bursa() { return base.Bursa() + BursaSuplimentara; }
+    public override int Tip() { return 10; }
+}
+
+//  CLASA: Celula
+
+class Celula
+{
+    public Persoana Persoana { get; set; }
+    public Celula Urmatoarea { get; set; }
+
+    public Celula(Persoana p)
+    {
+        Persoana = p;
+        Urmatoarea = null;
+    }
+
+    public void Afiseaza()
+    {
+        Console.WriteLine(new string('-', 40));
+        Persoana.Afisare();
+        Console.WriteLine(new string('-', 40));
+    }
+
+    public double Consum() { return Persoana.Salariu() + Persoana.Bursa(); }
+}
+
+//  CLASA: Lista
+
+class Lista
+{
+    private Celula prim;
+
+    public Lista() { prim = null; }
+
+    public void Inserare(Persoana p)
+    {
+        Celula noua = new Celula(p);
+        if (prim == null) { prim = noua; return; }
+        Celula curent = prim;
+        while (curent.Urmatoarea != null) curent = curent.Urmatoarea;
+        curent.Urmatoarea = noua;
+        Console.WriteLine("  >> '" + p.GetType().Name + "' adaugat cu succes.");
+    }
+
+    public void Exclude(string numeCautat)
+    {
+        if (prim == null) { Console.WriteLine("  Lista este goala."); return; }
+
+        if (ContineNume(prim.Persoana, numeCautat))
+        {
+            prim = prim.Urmatoarea;
+            Console.WriteLine("  >> '" + numeCautat + "' eliminat.");
+            return;
+        }
+
+        Celula prev = prim;
+        Celula curent = prim.Urmatoarea;
+        while (curent != null)
+        {
+            if (ContineNume(curent.Persoana, numeCautat))
+            {
+                prev.Urmatoarea = curent.Urmatoarea;
+                Console.WriteLine("  >> '" + numeCautat + "' eliminat.");
+                return;
+            }
+            prev = curent;
+            curent = curent.Urmatoarea;
+        }
+        Console.WriteLine("  >> Persoana '" + numeCautat + "' nu a fost gasita.");
+    }
+
+    private static bool ContineNume(Persoana p, string n)
+    {
+        // IndexOf cu StringComparison e disponibil si in C# 7.3
+        return p.NumeComplet.IndexOf(n, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    public void Afisare()
+    {
+        if (prim == null) { Console.WriteLine("  Lista este goala."); return; }
+        Celula curent = prim;
+        int i = 1;
+        while (curent != null)
+        {
+            Console.WriteLine("\n  [" + i++ + "]");
+            curent.Afiseaza();
+            curent = curent.Urmatoarea;
+        }
+    }
+
+    public void AfisareDupaTip(int tip)
+    {
+        Celula curent = prim;
+        bool gasit = false;
+        while (curent != null)
+        {
+            if (curent.Persoana.Tip() == tip)
+            {
+                curent.Afiseaza();
+                gasit = true;
+            }
+            curent = curent.Urmatoarea;
+        }
+        if (!gasit) Console.WriteLine("  Nu exista persoane de tipul selectat.");
+    }
+
+    public double TotalBani()
+    {
+        double total = 0;
+        Celula curent = prim;
+        while (curent != null)
+        {
+            total += curent.Consum();
+            curent = curent.Urmatoarea;
+        }
+        return total;
+    }
+
+    public int Numar()
+    {
+        int n = 0;
+        Celula c = prim;
+        while (c != null) { n++; c = c.Urmatoarea; }
+        return n;
+    }
+
+    public double SalariuMediu()
+    {
+        double sum = 0;
+        int cnt = 0;
+        Celula c = prim;
+        while (c != null)
+        {
+            if (c.Persoana.Salariu() > 0) { sum += c.Persoana.Salariu(); cnt++; }
+            c = c.Urmatoarea;
+        }
+        return cnt == 0 ? 0 : sum / cnt;
+    }
+
+    public void Cauta(string fragment)
+    {
+        Celula c = prim;
+        bool gasit = false;
+        while (c != null)
+        {
+            if (c.Persoana.NumeComplet.IndexOf(fragment, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                c.Afiseaza();
+                gasit = true;
+            }
+            c = c.Urmatoarea;
+        }
+        if (!gasit) Console.WriteLine("  Nu a fost gasit niciun rezultat.");
+    }
+}
+
+//  PROGRAM PRINCIPAL + MENIU
+
+class Program
+{
+    static Lista lista = new Lista();
+
+    static void Main()
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        IncarcaDateDemo();
+
+        bool rulare = true;
+        while (rulare)
+        {
+            AfiseazaMeniu();
+            Console.Write("\n  Optiunea: ");
+            string opt = Console.ReadLine().Trim();
+
+            switch (opt)
+            {
+                case "1": AdaugaPersoana(); break;
+                case "2": lista.Afisare(); break;
+                case "3": ExcludePersoana(); break;
+                case "4": AfiseazaDupaTip(); break;
+                case "5": CautaPersoana(); break;
+                case "6": AfiseazaStatistici(); break;
+                case "0": rulare = false; break;
+                default: Console.WriteLine("  Optiune invalida!"); break;
+            }
+            if (rulare)
+            {
+                Console.WriteLine("\n  Apasati ENTER pentru a continua...");
+                Console.ReadLine();
+            }
+        }
+        Console.WriteLine("\n  La revedere!");
+    }
+
+    static void AfiseazaMeniu()
+    {
+        Console.Clear();
+        Console.WriteLine("+==========================================+");
+        Console.WriteLine("|   GESTIUNEA PERSONALULUI UNIVERSITAR     |");
+        Console.WriteLine("+==========================================+");
+        Console.WriteLine("|  1. Adauga persoana                      |");
+        Console.WriteLine("|  2. Afiseaza toate persoanele            |");
+        Console.WriteLine("|  3. Exclude persoana (dupa nume)         |");
+        Console.WriteLine("|  4. Afiseaza dupa tip                    |");
+        Console.WriteLine("|  5. Cauta persoana                       |");
+        Console.WriteLine("|  6. Statistici financiare                |");
+        Console.WriteLine("|  0. Iesire                               |");
+        Console.WriteLine("+==========================================+");
+        Console.WriteLine("  Total persoane: " + lista.Numar());
+    }
+
+    static void AfiseazaMeniuTip()
+    {
+        Console.WriteLine("\n  Tipul persoanei:");
+        Console.WriteLine("   1 - Student");
+        Console.WriteLine("   2 - Angajat");
+        Console.WriteLine("   3 - Student Angajat");
+        Console.WriteLine("   4 - Administrator");
+        Console.WriteLine("   5 - Contabil");
+        Console.WriteLine("   6 - Lector");
+        Console.WriteLine("   7 - Sef Laborator");
+        Console.WriteLine("   8 - Consultant Part-Time");
+        Console.WriteLine("   9 - Jurist Part-Time");
+        Console.WriteLine("  10 - Student Bursier");
+    }
+
+    static void AdaugaPersoana()
+    {
+        AfiseazaMeniuTip();
+        Console.Write("  Alegeti tipul: ");
+        int tip;
+        if (!int.TryParse(Console.ReadLine(), out tip)) return;
+
+        Console.WriteLine("\n  Introduceti datele:\n");
+        try
+        {
+            Persoana p = null;
+            if (tip == 1) p = CitesteStudent();
+            else if (tip == 2) p = CitesteAngajat();
+            else if (tip == 3) p = CitesteStudentAngajat();
+            else if (tip == 4) p = CitesteAdministrator();
+            else if (tip == 5) p = CitesteContabil();
+            else if (tip == 6) p = CitesteLector();
+            else if (tip == 7) p = CitesteSefLaborator();
+            else if (tip == 8) p = CitesteConsultant();
+            else if (tip == 9) p = CitesteJurist();
+            else if (tip == 10) p = CitesteStudentBursier();
+            else throw new Exception("Tip necunoscut.");
+
+            lista.Inserare(p);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("  Eroare la citire: " + ex.Message);
+        }
+    }
+
+    // ─── Metode de citire ────────────────────────────────────
+
+    static Student CitesteStudent()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Grupa: "); string g = Console.ReadLine();
+        Console.Write("  Media: "); float m = float.Parse(Console.ReadLine());
+        return new Student(n, pr, an, g, m);
+    }
+
+    static Angajat CitesteAngajat()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        return new Angajat(n, pr, an, ore, pl);
+    }
+
+    static StudentAngajat CitesteStudentAngajat()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Grupa: "); string g = Console.ReadLine();
+        Console.Write("  Media: "); float m = float.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        return new StudentAngajat(n, pr, an, g, m, ore, pl);
+    }
+
+    static Administrator CitesteAdministrator()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  An angajare: "); int aa = int.Parse(Console.ReadLine());
+        Console.Write("  Grad calificare(1-5): "); int gr = int.Parse(Console.ReadLine());
+        return new Administrator(n, pr, an, ore, pl, aa, gr);
+    }
+
+    static Contabil CitesteContabil()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  Departament: "); string d = Console.ReadLine();
+        return new Contabil(n, pr, an, ore, pl, d);
+    }
+
+    static Lector CitesteLector()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  Titlu didactic: "); string t = Console.ReadLine();
+        return new Lector(n, pr, an, ore, pl, t);
+    }
+
+    static SefLaborator CitesteSefLaborator()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  Titlu didactic: "); string t = Console.ReadLine();
+        Console.Write("  Laborator: "); string l = Console.ReadLine();
+        return new SefLaborator(n, pr, an, ore, pl, t, l);
+    }
+
+    static ConsultantPartTime CitesteConsultant()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  Specialitate: "); string s = Console.ReadLine();
+        return new ConsultantPartTime(n, pr, an, ore, pl, s);
+    }
+
+    static JuristPartTime CitesteJurist()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Nr. ore: "); int ore = int.Parse(Console.ReadLine());
+        Console.Write("  Plata/ora: "); int pl = int.Parse(Console.ReadLine());
+        Console.Write("  Specializare: "); string s = Console.ReadLine();
+        return new JuristPartTime(n, pr, an, ore, pl, s);
+    }
+
+    static StudentBursier CitesteStudentBursier()
+    {
+        Console.Write("  Nume: "); string n = Console.ReadLine();
+        Console.Write("  Prenume: "); string pr = Console.ReadLine();
+        Console.Write("  An nastere: "); int an = int.Parse(Console.ReadLine());
+        Console.Write("  Grupa: "); string g = Console.ReadLine();
+        Console.Write("  Media: "); float m = float.Parse(Console.ReadLine());
+        Console.Write("  Bursa suplimentara (MDL): "); double b = double.Parse(Console.ReadLine());
+        return new StudentBursier(n, pr, an, g, m, b);
+    }
+
+    // ─── Alte optiuni de meniu ───────────────────────────────
+
+    static void ExcludePersoana()
+    {
+        Console.Write("  Introduceti numele persoanei de exclus: ");
+        string n = Console.ReadLine();
+        if (!string.IsNullOrEmpty(n)) lista.Exclude(n);
+    }
+
+    static void AfiseazaDupaTip()
+    {
+        AfiseazaMeniuTip();
+        Console.Write("  Alegeti tipul: ");
+        int tip;
+        if (int.TryParse(Console.ReadLine(), out tip))
+            lista.AfisareDupaTip(tip);
+    }
+
+    static void CautaPersoana()
+    {
+        Console.Write("  Introduceti fragmentul de cautat: ");
+        string f = Console.ReadLine();
+        if (!string.IsNullOrEmpty(f)) lista.Cauta(f);
+    }
+
+    static void AfiseazaStatistici()
+    {
+        Console.WriteLine("\n  Total persoane     : " + lista.Numar());
+        Console.WriteLine("  Total cheltuieli   : " + lista.TotalBani().ToString("F2") + " MDL");
+        Console.WriteLine("  Salariu mediu (ang): " + lista.SalariuMediu().ToString("F2") + " MDL");
+    }
+
+    // ─── Date demo ───────────────────────────────────────────
+    static void IncarcaDateDemo()
+    {
+        lista.Inserare(new Student("Ionescu", "Ana", 2002, "INF1801", 9.2f));
+        lista.Inserare(new Student("Popescu", "Mihai", 2001, "INF1802", 6.5f));
+        lista.Inserare(new Angajat("Rusu", "Victor", 1985, 160, 50));
+        lista.Inserare(new Administrator("Lungu", "Ion", 1975, 168, 70, 2005, 3));
+        lista.Inserare(new StudentAngajat("Ciobanu", "Maria", 2000, "INF1803", 8.0f, 80, 35));
+        lista.Inserare(new Lector("Gincu", "Silviu", 1978, 120, 80, "doctor"));
+        lista.Inserare(new SefLaborator("Moraru", "Dumitru", 1972, 168, 90, "conferentiar", "Lab Programare"));
+        lista.Inserare(new Contabil("Cojocaru", "Elena", 1980, 168, 60, "Financiar"));
+        lista.Inserare(new ConsultantPartTime("Botnaru", "Andrei", 1990, 40, 100, "IT Security"));
+        lista.Inserare(new JuristPartTime("Negru", "Cristina", 1988, 60, 120, "Drept Civil"));
+        lista.Inserare(new StudentBursier("Vrabie", "Tudor", 2003, "INF1901", 9.8f, 500));
+    }
+}
+}</code></pre>
+            </details>
+          </div>
+          
+          <div class="output-wrapper">
+            <h4 class="section-subtitle">Rezultatul Rularii</h4>
+            <img src="c:\Users\Lenovo\OneDrive\Desktop\Rularea sarcinilor-practica\Sarcina suplimentara - practica.png" alt="Captura ecran studiu de caz" class="output-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 · Portofoliu Academic · Realizat manual</p>
+  </footer>
+
+</body>
+</html>
